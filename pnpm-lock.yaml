@@ -8,14 +8,14 @@ dependencies:
   '@notionhq/client':
     specifier: ^2.2.13
     version: 2.2.13
-  dotenv:
-    specifier: ^16.3.1
-    version: 16.3.1
 
 devDependencies:
-  typescript:
-    specifier: ^5.2.2
-    version: 5.2.2
+  bun:
+    specifier: 1.0.13
+    version: 1.0.13
+  bun-types:
+    specifier: 1.0.13
+    version: 1.0.13
 
 packages:
 
@@ -29,15 +29,63 @@ packages:
       - encoding
     dev: false
 
+  /@oven/bun-darwin-aarch64@1.0.13:
+    resolution: {integrity: sha512-msb1ikpJSgmmhbV2mN8xrTUVvVmi4MVWTlixMdX5zZkI1po5wjNLiUnwNzHqPpUSolsXcmMZHtczYKwmgL+TUA==}
+    cpu: [arm64]
+    os: [darwin]
+    requiresBuild: true
+    dev: true
+    optional: true
+
+  /@oven/bun-darwin-x64-baseline@1.0.13:
+    resolution: {integrity: sha512-lCg7o013uVZG7t8jpidqCxgR1JSX0q/SrlDrpOwcTHuewWip0KwshM5H8HjXGmFaf3aIO6Y9/kBmNSU5xjqWHQ==}
+    cpu: [x64]
+    os: [darwin]
+    requiresBuild: true
+    dev: true
+    optional: true
+
+  /@oven/bun-darwin-x64@1.0.13:
+    resolution: {integrity: sha512-zIAOVyUJRDPGZroQEn46Hu0k2lZm2a1G3fQ0SQUqI9DIKS317HzrdC0SMAeSLcOVVdyfvF9VXernwcyo/ElldQ==}
+    cpu: [x64]
+    os: [darwin]
+    requiresBuild: true
+    dev: true
+    optional: true
+
+  /@oven/bun-linux-aarch64@1.0.13:
+    resolution: {integrity: sha512-srX4XwgA5al4GbIz9JlczJCEFgkkSmCJyiO47/oVefbO2h/WeFR7+uod/INQee+XiRSQsp/Wkdm4TwGtjm913Q==}
+    cpu: [arm64]
+    os: [linux]
+    requiresBuild: true
+    dev: true
+    optional: true
+
+  /@oven/bun-linux-x64-baseline@1.0.13:
+    resolution: {integrity: sha512-XWIndF9jeqvZNrPguAG4jIq0sncdz90bM8Um2DoyBwweUeZj8z44hHbmkVCXarlNbyicEMp/LACatVC7hQ/hwQ==}
+    cpu: [x64]
+    os: [linux]
+    requiresBuild: true
+    dev: true
+    optional: true
+
+  /@oven/bun-linux-x64@1.0.13:
+    resolution: {integrity: sha512-RmYuruKbySfyAJaptTZbYFjMAQEPINRI+XT/JTSqTc6vzujA53Z06S9G6sc3oEp3ws8wPH+ILkrOP8A0FbxWEg==}
+    cpu: [x64]
+    os: [linux]
+    requiresBuild: true
+    dev: true
+    optional: true
+
   /@types/node-fetch@2.6.9:
     resolution: {integrity: sha512-bQVlnMLFJ2d35DkPNjEPmd9ueO/rh5EiaZt2bhqiSarPjZIuIV6bPQVqcrEyvNo+AfTrRGVazle1tl597w3gfA==}
     dependencies:
-      '@types/node': 20.9.0
+      '@types/node': 20.9.2
       form-data: 4.0.0
     dev: false
 
-  /@types/node@20.9.0:
-    resolution: {integrity: sha512-nekiGu2NDb1BcVofVcEKMIwzlx4NjHlcjhoxxKBNLtz15Y1z7MYf549DFvkHSId02Ax6kGwWntIBPC3l/JZcmw==}
+  /@types/node@20.9.2:
+    resolution: {integrity: sha512-WHZXKFCEyIUJzAwh3NyyTHYSR35SevJ6mZ1nWwJafKtiQbqRTIKSRcw3Ma3acqgsent3RRDqeVwpHntMk+9irg==}
     dependencies:
       undici-types: 5.26.5
     dev: false
@@ -45,6 +93,25 @@ packages:
   /asynckit@0.4.0:
     resolution: {integrity: sha512-Oei9OH4tRh0YqU3GxhX79dM/mwVgvbZJaSNaRk+bshkj0S5cfHcgYakreBjrHwatXKbz+IoIdYLxrKim2MjW0Q==}
     dev: false
+
+  /bun-types@1.0.13:
+    resolution: {integrity: sha512-QQH6NLAOU+2tWgQuDSAYBFy+kQwVhPJLB0Q38QLjCmFUZJEYCiiq7tzvU784LAIX2onzO6gr+gIGXt8yCt0cJw==}
+    dev: true
+
+  /bun@1.0.13:
+    resolution: {integrity: sha512-Yso47G+v88qiJR3eQv65ITKubOUWXe7I5t8GMumxSFzM/wW1qiyoAXqNjKF8r8JPnFsJ5PZ3Wy3sMA++x1Rppw==}
+    cpu: [arm64, x64]
+    os: [darwin, linux]
+    hasBin: true
+    requiresBuild: true
+    optionalDependencies:
+      '@oven/bun-darwin-aarch64': 1.0.13
+      '@oven/bun-darwin-x64': 1.0.13
+      '@oven/bun-darwin-x64-baseline': 1.0.13
+      '@oven/bun-linux-aarch64': 1.0.13
+      '@oven/bun-linux-x64': 1.0.13
+      '@oven/bun-linux-x64-baseline': 1.0.13
+    dev: true
 
   /combined-stream@1.0.8:
     resolution: {integrity: sha512-FQN4MRfuJeHf7cBbBMJFXhKSDq+2kAArBlmRBvcvFE5BB1HZKXtSFASDhdlz9zOYwxh8lDdnvmMOe/+5cdoEdg==}
@@ -56,11 +123,6 @@ packages:
   /delayed-stream@1.0.0:
     resolution: {integrity: sha512-ZySD7Nf91aLB0RxL4KGrKHBXl7Eds1DAmEdcoVawXnLD7SDhpNgtuII2aAkg7a7QS41jxPSZ17p4VdGnMHk3MQ==}
     engines: {node: '>=0.4.0'}
-    dev: false
-
-  /dotenv@16.3.1:
-    resolution: {integrity: sha512-IPzF4w4/Rd94bA9imS68tZBaYyBWSCE47V1RGuMrB94iyTOIEwRmVL2x/4An+6mETpLrKJ5hQkB8W4kFAadeIQ==}
-    engines: {node: '>=12'}
     dev: false
 
   /form-data@4.0.0:
@@ -99,12 +161,6 @@ packages:
   /tr46@0.0.3:
     resolution: {integrity: sha512-N3WMsuqV66lT30CrXNbEjx4GEwlow3v6rr4mCcv6prnfwhS01rkgyFdjPNBYd9br7LpXV1+Emh01fHnq2Gdgrw==}
     dev: false
-
-  /typescript@5.2.2:
-    resolution: {integrity: sha512-mI4WrpHsbCIcwT9cF4FZvr80QUeKvsUsUvKDoR+X/7XHQH98xYD8YHZg7ANtz2GtZt/CBq2QJ0thkGJMHfqc1w==}
-    engines: {node: '>=14.17'}
-    hasBin: true
-    dev: true
 
   /undici-types@5.26.5:
     resolution: {integrity: sha512-JlCMO+ehdEIKqlFxk6IfVoAUVmgz7cU7zD/h9XZ0qzeosSHmUJVOzSQvvYSYWXkFXC+IfLKSIffhv0sVZup6pA==}
