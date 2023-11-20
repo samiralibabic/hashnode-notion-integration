@@ -1,52 +1,62 @@
 import { Client } from "@notionhq/client";
 import { ArticleData } from "../model/ArticleData.js";
-import '../util/logger.ts';
+import "../util/logger";
+import {
+  BlockObjectRequest,
+  CreatePageResponse,
+} from "@notionhq/client/build/src/api-endpoints.js";
+import { markdownToBlocks, markdownToRichText } from "@tryfabric/martian";
 
 const notionKey = process.env.NOTION_API_KEY;
 const pageId = process.env.NOTION_PAGE_ID;
 
-if (!notionKey || !pageId) {
-  console.error("NOTION_API_KEY or NOTION_PAGE_ID not found in env!");
+if (!notionKey) {
+  console.error("NOTION_API_KEY not found in env!");
   process.exit(1);
 }
 
 const notion = new Client({ auth: notionKey });
 
-export async function postToNotion(draftData: ArticleData) {
+export async function postToNotionPage(draftData: ArticleData, pageId: string) {
   try {
-    const { title, content } = draftData;
-    const blockId = pageId;
+    const { content } = draftData;
+    const notionBlocks = markdownToBlocks(content.markdown);
 
     const notionResponse = await notion.blocks.children.append({
-      block_id: blockId as string,
-      children: [
-        {
-          heading_1: {
-            rich_text: [
-              {
-                text: {
-                  content: title,
-                },
-              },
-            ],
-          },
-        },
-        {
-          paragraph: {
-            rich_text: [
-              {
-                text: {
-                  content: content.markdown,
-                },
-              },
-            ],
-          },
-        },
-      ],
+      block_id: pageId,
+      children: notionBlocks as BlockObjectRequest[],
     });
     console.info("Response from Notion: ", notionResponse);
   } catch (error: any) {
     console.error("Error posting to Notion:", error.message);
+    throw error;
+  }
+}
+
+export async function fetchNotionDatabase(database_id: string) {
+  try {
+    const response = await notion.databases.query({ database_id });
+    return response.results;
+  } catch (error: any) {
+    console.error("Error fetching Notion database:", error.message);
+    throw error;
+  }
+}
+
+export async function addPageToNotionDatabase(
+  pageData: ArticleData,
+  databaseId: string
+): Promise<CreatePageResponse> {
+  try {
+    const response = await notion.pages.create({
+      parent: { database_id: databaseId },
+      properties: {
+        Title: { title: [{ text: { content: pageData.title } }] },
+      },
+    });
+    return response;
+  } catch (error: any) {
+    console.error("Error creating page:", error.message);
     throw error;
   }
 }

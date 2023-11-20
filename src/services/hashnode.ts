@@ -46,7 +46,8 @@ export async function fetchPost(postSlug: string): Promise<ArticleData> {
     `;
 
     const result = await gqlHashnodeRequest(query);
-    return result.data.post;
+
+    return result.data.publication.post;
   } catch (error: any) {
     console.error("Error fetching post from Hashnode: ", error.message);
     throw error;

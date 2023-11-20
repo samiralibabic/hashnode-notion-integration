@@ -1,4 +1,5 @@
 # Hashnode - Notion integration
+
 This is an integration for Notion which enables to work with Hashnode blogs directly from Notion.
 
 ## Features
@@ -7,39 +8,40 @@ This is an integration for Notion which enables to work with Hashnode blogs dire
 1. Properties sync to Hashnode (eg. Published to true will publish the article)
 1. Single Notion DB holds a single Hashnode publication
 
-
 ## Tech stack
 
-* Runtime and tooling: Bun
-* Notion Client SDK
+- Runtime and tooling: Bun
+- Notion Client SDK
+- @tryfabric/martian for parsing Markdown into Notion blocks
 
 ## Setup
 
 Copy `.env.example` to `.env` and fill in the values:
 
 ```shell
-NOTION_PAGE_ID = '<your_page_id>'
-NOTION_API_KEY = '<insert_your_notion_api_key>'
+# Notion
+NOTION_DB_ID = '<notion_db_id>'
+NOTION_API_KEY = '<notion_api_key>'
 
 # Hashnode
-HASHNODE_API_KEY = '<insert_your_hashnode_api_key>'
-HASHNODE_PUBLICATION = '<publication_id>'
+HASHNODE_PUBLICATION = '<hashnode_publication>'
+HASHNODE_API_KEY = '<hashnode_api_key>'
 ```
 
 ### Install dependencies
 
 ```shell
-pnpm i
+bun install
 ```
 
 ### Run and watch
 
 ```shell
-pnpm dev
+bun dev
 ```
 
 ### Run
-```shell
-pnpm start
-```
 
+```shell
+bun start
+```
