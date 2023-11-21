@@ -1,4 +1,4 @@
-import { fetchDraft, fetchPost } from "./services/hashnode.js";
+import { fetchDraft, fetchPost, fetchPosts } from "./services/hashnode.js";
 import {
   addPageToNotionDatabase,
   fetchNotionDatabase,
@@ -19,6 +19,14 @@ async function fetchDataAndPost() {
 
 // fetchDataAndPost();
 
-const article = await fetchPost("an-introduction-to-link-shortening");
+/* const article = await fetchPost("an-introduction-to-link-shortening");
 const response = await addPageToNotionDatabase(article, "#");
-const response2 = await postToNotionPage(article, response.id);
+const response2 = await postToNotionPage(article, response.id); */
+
+
+// this can be used to fetch posts in batches too
+console.log(await fetchPosts(5));
+
+// On init: fetch all posts from hashnode, and create pages in Notion for a) new articles, b) updated atricles
+// This will ensure all articles from Hashnode are available in Notion on startup
+// Can be used later for a two-way sync, but for now we will restrict editing to Notion only.

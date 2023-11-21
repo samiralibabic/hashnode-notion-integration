@@ -4,8 +4,8 @@ This is an integration for Notion which enables to work with Hashnode blogs dire
 
 ## Features
 
-1. Possible to edit blogs either on Hashnode or in Notion. Changes sync every n seconds/minutes (configurable)
-1. Properties sync to Hashnode (eg. Published to true will publish the article)
+1. Possible to edit Hashnode blogs in Notion. Changes sync every n seconds/minutes (configurable)
+1. Properties sync to Hashnode (there is a mapping from template to Hashnode)
 1. Single Notion DB holds a single Hashnode publication
 
 ## Tech stack

@@ -17,6 +17,23 @@ if (!notionKey) {
 
 const notion = new Client({ auth: notionKey });
 
+
+// getters
+export async function fetchNotionDatabase(database_id: string) {
+  try {
+    const response = await notion.databases.query({ database_id });
+    return response.results;
+  } catch (error: any) {
+    console.error("Error fetching Notion database:", error.message);
+    throw error;
+  }
+}
+
+// fetch articles from notion database
+export async function fetchNotionArticles(databaseId: string){
+}
+
+// setters
 export async function postToNotionPage(draftData: ArticleData, pageId: string) {
   try {
     const { content } = draftData;
@@ -29,16 +46,6 @@ export async function postToNotionPage(draftData: ArticleData, pageId: string) {
     console.info("Response from Notion: ", notionResponse);
   } catch (error: any) {
     console.error("Error posting to Notion:", error.message);
-    throw error;
-  }
-}
-
-export async function fetchNotionDatabase(database_id: string) {
-  try {
-    const response = await notion.databases.query({ database_id });
-    return response.results;
-  } catch (error: any) {
-    console.error("Error fetching Notion database:", error.message);
     throw error;
   }
 }
@@ -57,6 +64,22 @@ export async function addPageToNotionDatabase(
     return response;
   } catch (error: any) {
     console.error("Error creating page:", error.message);
+    throw error;
+  }
+}
+
+export async function updateNotionPage(pageId: string, pageData: ArticleData) {
+  try {
+    const { content } = pageData;
+    const notionBlocks = markdownToBlocks(content.markdown);
+
+    const notionResponse = await notion.blocks.children.append({
+      block_id: pageId,
+      children: notionBlocks as BlockObjectRequest[],
+    });
+    console.info("Response from Notion: ", notionResponse);
+  } catch (error: any) {
+    console.error("Error updating Notion page:", error.message);
     throw error;
   }
 }

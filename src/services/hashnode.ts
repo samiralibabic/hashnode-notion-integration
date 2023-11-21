@@ -7,6 +7,14 @@ if (!hashnodePublication) {
   process.exit(1);
 }
 
+type PostsResponse = {
+  posts: {
+    id: string;
+    slug: string;
+  }[];
+  nextBatch: string | false;
+};
+
 export async function fetchDraft(draftId: string): Promise<ArticleData> {
   try {
     const query = `
@@ -50,6 +58,58 @@ export async function fetchPost(postSlug: string): Promise<ArticleData> {
     return result.data.publication.post;
   } catch (error: any) {
     console.error("Error fetching post from Hashnode: ", error.message);
+    throw error;
+  }
+}
+
+export async function fetchPosts(
+  numResults: number,
+  cursor?: string
+): Promise<PostsResponse> {
+  try {
+    const query = `
+    {
+      publication(host:"${hashnodePublication}") {
+        posts(first: ${numResults}${cursor ? `, after: "${cursor}"` : ""}) {
+          pageInfo {
+            hasNextPage
+            endCursor
+          }
+          edges {
+            node {
+              id
+              slug
+            }
+          }
+        }
+      }
+    }
+    `;
+
+    const result = (await gqlHashnodeRequest(query)) as {
+      data: {
+        publication: {
+          posts: {
+            pageInfo: {
+              hasNextPage: boolean;
+              endCursor: string | null;
+            };
+            edges: Array<{ node: { id: string; slug: string } }>;
+          };
+        };
+      };
+    };
+
+    const posts = result.data.publication.posts.edges.map((edge) => edge.node);
+    const { hasNextPage, endCursor } = result.data.publication.posts.pageInfo;
+    const nextBatch = hasNextPage ? endCursor || false : false;
+
+    return {
+      posts,
+      nextBatch,
+    };
+  } catch (error: any) {
+    console.error("Error fetching posts from Hashnode: ", error.message);
     throw error;
   }
 }
