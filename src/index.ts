@@ -1,4 +1,4 @@
-import { fetchDraft, fetchPost, fetchPosts } from "./services/hashnode.js";
+import { fetchDrafts, fetchPosts } from "./services/hashnode.js";
 import {
   addPageToNotionDatabase,
   fetchNotionDatabase,
@@ -6,27 +6,49 @@ import {
 } from "./services/notion.js";
 import "./util/logger";
 
-const notionDbId = process.env.NOTION_DB_ID;
+// const notionDbId = process.env.NOTION_DB_ID;
 
-async function fetchDataAndPost() {
+async function init() {
   try {
-    const draft = await fetchDraft("#");
-    await postToNotionPage(draft, "#");
+    await syncHashnodeToNotion();
   } catch (error: any) {
     console.error("An error occurred:", error.message);
   }
 }
 
-// fetchDataAndPost();
+async function fetchAll(
+  type: "posts" | "drafts" = "posts",
+  batchSize: number | string = 5
+) {
+  let posts = [];
+  let nextBatch: string | false = false;
 
-/* const article = await fetchPost("an-introduction-to-link-shortening");
-const response = await addPageToNotionDatabase(article, "#");
-const response2 = await postToNotionPage(article, response.id); */
+  do {
+    let response: any =
+      type === "posts"
+        ? await fetchPosts(
+            typeof batchSize === "number" ? batchSize : parseInt(batchSize),
+            nextBatch !== false ? nextBatch : undefined
+          )
+        : await fetchDrafts(
+            typeof batchSize === "number" ? batchSize : parseInt(batchSize),
+            nextBatch !== false ? nextBatch : undefined
+          );
+    posts.push(response.posts);
+    nextBatch = response.nextBatch;
+  } while (nextBatch);
+
+  return posts;
+}
 
 
-// this can be used to fetch posts in batches too
-console.log(await fetchPosts(5));
+async function syncHashnodeToNotion() {
+  const posts = await fetchAll("posts", 10);
+  const drafts = await fetchAll("drafts", 10);
 
-// On init: fetch all posts from hashnode, and create pages in Notion for a) new articles, b) updated atricles
-// This will ensure all articles from Hashnode are available in Notion on startup
-// Can be used later for a two-way sync, but for now we will restrict editing to Notion only.
+  console.log(posts, drafts);
+  //  posts.forEach((posts) => await postToNotionPage(post, page));
+  //  drafts.forEach((draft) => await postToNotionPage(draft, page));
+}
+
+await init();

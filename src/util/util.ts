@@ -12,7 +12,7 @@ export async function gqlHashnodeRequest(query: string) {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${hashnodeKey}`,
+        Authorization: `${hashnodeKey}`,
       },
       body: data,
     });
