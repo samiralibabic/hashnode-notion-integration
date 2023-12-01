@@ -29,10 +29,6 @@ export async function fetchNotionDatabase(database_id: string) {
   }
 }
 
-// fetch articles from notion database
-export async function fetchNotionArticles(databaseId: string){
-}
-
 // setters
 export async function postToNotionPage(draftData: ArticleData, pageId: string) {
   try {

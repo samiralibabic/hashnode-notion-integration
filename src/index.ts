@@ -1,4 +1,9 @@
-import { fetchDrafts, fetchPosts } from "./services/hashnode.js";
+import {
+  fetchDraft,
+  fetchDrafts,
+  fetchPost,
+  fetchPosts,
+} from "./services/hashnode.js";
 import {
   addPageToNotionDatabase,
   fetchNotionDatabase,
@@ -6,7 +11,7 @@ import {
 } from "./services/notion.js";
 import "./util/logger";
 
-// const notionDbId = process.env.NOTION_DB_ID;
+const notionDbId = process.env.NOTION_DB_ID;
 
 async function init() {
   try {
@@ -38,17 +43,38 @@ async function fetchAll(
     nextBatch = response.nextBatch;
   } while (nextBatch);
 
-  return posts;
+  return posts.flat();
 }
-
 
 async function syncHashnodeToNotion() {
   const posts = await fetchAll("posts", 10);
   const drafts = await fetchAll("drafts", 10);
 
-  console.log(posts, drafts);
-  //  posts.forEach((posts) => await postToNotionPage(post, page));
-  //  drafts.forEach((draft) => await postToNotionPage(draft, page));
+  const notionDb: any[] = await fetchNotionDatabase(notionDbId as string);
+  const notionArticleIds = notionDb
+    .map((page) => page.properties.HashnodeId.rich_text[0]?.plain_text)
+    .filter((id) => id);
+
+  const postSlugsToAdd = posts
+    .filter((post) => !notionArticleIds.includes(post.id))
+    .map((post) => post.slug);
+
+  const draftIdsToAdd = drafts
+    .filter((draft) => !notionArticleIds.includes(draft.id))
+    .map((draft) => draft.id);
+
+  const postPromises = postSlugsToAdd.map(
+    async (slug) => await fetchPost(slug)
+  );
+  const draftPromises = draftIdsToAdd.map(async (id) => await fetchDraft(id));
+
+  const postsToAdd = await Promise.all(postPromises);
+  const draftsToAdd = await Promise.all(draftPromises);
+
+  // TODO: after creating each new page, fetch it's id and call postToNotionPage to 
+  // populate its content / markdown
+  postsToAdd.forEach((post) => addPageToNotionDatabase(post, notionDbId as string));
+  draftsToAdd.forEach((draft) => addPageToNotionDatabase(draft, notionDbId as string));
 }
 
 await init();

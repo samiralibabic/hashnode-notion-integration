@@ -18,51 +18,47 @@ interface PostsResponse {
   nextBatch: string | boolean;
 }
 
-export async function fetchDraft(draftId: string): Promise<ArticleData> {
+interface HashnodeQueryOptions {
+  id?: string;
+  slug?: string;
+}
+
+async function fetchPostOrDraft(
+  options: HashnodeQueryOptions
+): Promise<ArticleData> {
   try {
     const query = `
-    query {
-      draft(id: "${draftId}") {
-        title
-        content {
-          html
-          text
-          markdown
+      {
+        ${
+          options.id
+            ? `draft(id: "${options.id}")`
+            : `publication(host: "${hashnodePublication}") { post(slug: "${options.slug}")`
+        }
+        {
+          title
+          subtitle
+          content {
+            markdown
+          }
         }
       }
-    }    
-  `;
+    ${options.id ? `` : `}`}
+    `;
 
     const result = await gqlHashnodeRequest(query);
-    return result.data.draft;
+    return options.id ? result.data.draft : result.data.publication.post;
   } catch (error: any) {
-    console.error("Error fetching draft from Hashnode:", error.message);
+    console.error(`Error fetching data from Hashnode: ${error.message}`);
     throw error;
   }
 }
 
+export async function fetchDraft(draftId: string): Promise<ArticleData> {
+  return fetchPostOrDraft({ id: draftId });
+}
+
 export async function fetchPost(postSlug: string): Promise<ArticleData> {
-  try {
-    const query = `
-      {
-        publication(host: "${hashnodePublication}") {
-          post(slug: "${postSlug}") {
-            title
-            content {
-              markdown
-            }
-          }
-        }
-      }
-    `;
-
-    const result = await gqlHashnodeRequest(query);
-
-    return result.data.publication.post;
-  } catch (error: any) {
-    console.error("Error fetching post from Hashnode: ", error.message);
-    throw error;
-  }
+  return fetchPostOrDraft({ slug: postSlug });
 }
 
 async function fetchPostsOrDrafts(
@@ -72,26 +68,26 @@ async function fetchPostsOrDrafts(
 ): Promise<PostsResponse> {
   try {
     const query = `
-    {
-      publication(host:"${hashnodePublication}") {
-        ${type}(first: ${numResults}${cursor ? `, after: "${cursor}"` : ""}) {
-          pageInfo {
-            hasNextPage
-            endCursor
-          }
-          edges {
-            node {
-              id
-              slug
+      {
+        publication(host:"${hashnodePublication}") {
+          ${type}(first: ${numResults}${cursor ? `, after: "${cursor}"` : ""}) {
+            pageInfo {
+              hasNextPage
+              endCursor
+            }
+            edges {
+              node {
+                id
+                slug
+              }
             }
           }
         }
       }
-    }
     `;
 
     const result = await gqlHashnodeRequest(query);
-    
+
     const posts = result.data.publication[type].edges.map(
       (edge: { node: any }) => edge.node
     );
@@ -103,7 +99,7 @@ async function fetchPostsOrDrafts(
       nextBatch,
     };
   } catch (error: any) {
-    console.error("Error fetching posts from Hashnode: ", error.message);
+    console.error(`Error fetching ${type} from Hashnode: `, error.message);
     throw error;
   }
 }
