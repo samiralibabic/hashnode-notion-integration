@@ -6,12 +6,13 @@ import {
 } from "./services/hashnode.js";
 import {
   addPageToNotionDatabase,
+  createNewDatabase,
   fetchNotionDatabase,
+  getDatabaseFromPage,
+  getSharedPage,
   postToNotionPage,
 } from "./services/notion.js";
 import "./util/logger";
-
-const notionDbId = process.env.NOTION_DB_ID;
 
 async function init() {
   try {
@@ -50,9 +51,24 @@ async function syncHashnodeToNotion() {
   const posts = await fetchAll("posts", 10);
   const drafts = await fetchAll("drafts", 10);
 
+  // for now, just take the first page we find
+  const sharedPage = await getSharedPage();
+
+  if (!sharedPage) {
+    console.error("No shared page found in Notion");
+    process.exit(1);
+  }
+
+  const res = await getDatabaseFromPage(sharedPage.id); // also, returns the first db it finds
+  let notionDbId = res.database?.id;
+
+  if (!res.hasDatabase) {
+    notionDbId = await createNewDatabase(sharedPage.id); // or creates a new one if not found
+  }
+
   const notionDb: any[] = await fetchNotionDatabase(notionDbId as string);
   const notionArticleIds = notionDb
-    .map((page) => page.properties.HashnodeId.rich_text[0]?.plain_text)
+    .map((page) => page.properties.hashnodeIdOrSlug.rich_text[0]?.plain_text)
     .filter((id) => id);
 
   const postSlugsToAdd = posts
@@ -71,10 +87,14 @@ async function syncHashnodeToNotion() {
   const postsToAdd = await Promise.all(postPromises);
   const draftsToAdd = await Promise.all(draftPromises);
 
-  // TODO: after creating each new page, fetch it's id and call postToNotionPage to 
-  // populate its content / markdown
-  postsToAdd.forEach((post) => addPageToNotionDatabase(post, notionDbId as string));
-  draftsToAdd.forEach((draft) => addPageToNotionDatabase(draft, notionDbId as string));
+  postsToAdd.forEach(async (post) => {
+    let newPageId = await addPageToNotionDatabase(post, notionDbId as string);
+    await postToNotionPage(post, newPageId);
+  });
+  draftsToAdd.forEach(async (draft) => {
+    let newPageId = await addPageToNotionDatabase(draft, notionDbId as string);
+    await postToNotionPage(draft, newPageId);
+  });
 }
 
 await init();

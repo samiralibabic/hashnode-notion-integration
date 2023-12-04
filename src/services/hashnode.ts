@@ -35,6 +35,7 @@ async function fetchPostOrDraft(
             : `publication(host: "${hashnodePublication}") { post(slug: "${options.slug}")`
         }
         {
+          idOrSlug: ${options.id ? `id` : `slug`}
           title
           subtitle
           content {
@@ -46,6 +47,11 @@ async function fetchPostOrDraft(
     `;
 
     const result = await gqlHashnodeRequest(query);
+    if (options.id) {
+      result.data.draft.status = 'Draft';
+    } else {
+      result.data.publication.post.status = 'Published';
+    }
     return options.id ? result.data.draft : result.data.publication.post;
   } catch (error: any) {
     console.error(`Error fetching data from Hashnode: ${error.message}`);
