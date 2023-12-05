@@ -138,7 +138,8 @@ export async function fetchNotionDatabase(database_id: string) {
 export async function postToNotionPage(draftData: ArticleData, pageId: string) {
   try {
     const { content } = draftData;
-    const notionBlocks = markdownToBlocks(content.markdown);
+    const cleanMarkdown = content.markdown.replace(/ align="[^"]+"/g, '');
+    const notionBlocks = markdownToBlocks(cleanMarkdown);
 
     const notionResponse = await notion.blocks.children.append({
       block_id: pageId,

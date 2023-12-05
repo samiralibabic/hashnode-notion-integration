@@ -72,7 +72,7 @@ async function syncHashnodeToNotion() {
     .filter((id) => id);
 
   const postSlugsToAdd = posts
-    .filter((post) => !notionArticleIds.includes(post.id))
+    .filter((post) => !notionArticleIds.includes(post.slug))
     .map((post) => post.slug);
 
   const draftIdsToAdd = drafts
