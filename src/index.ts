@@ -6,6 +6,7 @@ import {
 } from "./services/hashnode.js";
 import {
   addPageToNotionDatabase,
+  connectToNotion,
   createNewDatabase,
   fetchNotionDatabase,
   getDatabaseFromPage,
@@ -14,8 +15,28 @@ import {
 } from "./services/notion.js";
 import "./util/logger";
 
-async function init() {
+Bun.serve({
+  async fetch(req) {
+    const url = new URL(req.url);
+    if (url.pathname === "/") return new Response("Home page!");
+    if (url.pathname === "/redirect") {
+      const authCode = url.searchParams.get("code") as string;
+      await init(authCode);
+      return new Response(
+        "Sync complete! You may close this page and navigate Back to Notion."
+      );
+    }
+    return new Response("404!");
+  },
+  tls: {
+    key: Bun.file("./ssl/localhost.key"),
+    cert: Bun.file("./ssl/localhost.crt"),
+  },
+});
+
+async function init(authCode: string) {
   try {
+    await connectToNotion(authCode);
     await syncHashnodeToNotion();
   } catch (error: any) {
     console.error("An error occurred:", error.message);
@@ -96,5 +117,3 @@ async function syncHashnodeToNotion() {
     await postToNotionPage(draft, newPageId);
   });
 }
-
-await init();

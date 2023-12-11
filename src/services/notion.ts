@@ -12,15 +12,41 @@ import {
 } from "@notionhq/client/build/src/api-endpoints.js";
 import { markdownToBlocks, markdownToRichText } from "@tryfabric/martian";
 
-const notionKey = process.env.NOTION_API_KEY;
-const pageId = process.env.NOTION_PAGE_ID;
+//const notionKey = process.env.NOTION_API_KEY;
+//const pageId = process.env.NOTION_PAGE_ID;
 
-if (!notionKey) {
-  console.error("NOTION_API_KEY not found in env!");
+const clientId = process.env.OAUTH_CLIENT_ID;
+const clientSecret = process.env.OAUTH_CLIENT_SECRET;
+const redirectUrl = process.env.OAUTH_REDIRECT_URL;
+
+if (!clientId || !clientSecret || !redirectUrl) {
+  console.error("OAuth data not found in .env.");
   process.exit(1);
 }
 
-const notion = new Client({ auth: notionKey });
+let notion: Client;
+
+export async function connectToNotion(authCode: string) {
+  const encoded = Buffer.from(`${clientId}:${clientSecret}`).toString("base64");
+  
+  const response = await fetch("https://api.notion.com/v1/oauth/token", {
+    method: "POST",
+    headers: {
+      Accept: "application/json",
+      "Content-Type": "application/json",
+      Authorization: `Basic ${encoded}`,
+    },
+    body: JSON.stringify({
+      grant_type: "authorization_code",
+      code: authCode,
+      redirect_uri: redirectUrl,
+    }),
+  });
+
+  const data: any = await response.json();
+  notion = new Client({ auth: data["access_token"] });
+  return data;
+}
 
 // getters
 export async function getSharedPage() {
@@ -28,10 +54,12 @@ export async function getSharedPage() {
     const response = await notion.search({
       filter: {
         value: "page",
-        property: "object"
-      }
+        property: "object",
+      },
     });
-    const sharedParentPage = response.results.find((page) => (page as PageObjectResponse).parent?.type === "workspace");
+    const sharedParentPage = response.results.find(
+      (page) => (page as PageObjectResponse).parent?.type === "workspace"
+    );
     return sharedParentPage ? sharedParentPage : null;
   } catch (error: any) {
     console.error("Error fetching shared content:", error.message);
@@ -51,7 +79,7 @@ export async function getDatabaseFromPage(
     const blockListResponse = await notion.blocks.children.list({
       block_id: page_id,
     });
-    
+
     if (blockListResponse.results.length !== 0) {
       response.hasContent = true;
 
@@ -98,7 +126,7 @@ export async function createNewDatabase(parentPageId: string) {
         Title: { title: {} },
         hashnodeIdOrSlug: {
           type: "rich_text",
-          rich_text: {}
+          rich_text: {},
         },
         status: {
           type: "select",
@@ -111,10 +139,10 @@ export async function createNewDatabase(parentPageId: string) {
               {
                 name: "Draft",
                 color: "red",
-              }
-            ]
-          }
-        }
+              },
+            ],
+          },
+        },
       },
     });
     return response.id;
@@ -138,7 +166,7 @@ export async function fetchNotionDatabase(database_id: string) {
 export async function postToNotionPage(draftData: ArticleData, pageId: string) {
   try {
     const { content } = draftData;
-    const cleanMarkdown = content.markdown.replace(/ align="[^"]+"/g, '');
+    const cleanMarkdown = content.markdown.replace(/ align="[^"]+"/g, "");
     const notionBlocks = markdownToBlocks(cleanMarkdown);
 
     const notionResponse = await notion.blocks.children.append({
@@ -168,9 +196,9 @@ export async function addPageToNotionDatabase(
         status: {
           type: "select",
           select: {
-            name: articleData.status
-          }
-        }
+            name: articleData.status,
+          },
+        },
       },
     });
     return response.id;

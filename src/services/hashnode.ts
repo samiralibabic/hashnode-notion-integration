@@ -46,7 +46,7 @@ async function fetchPostOrDraft(
     ${options.id ? `` : `}`}
     `;
 
-    const result = await gqlHashnodeRequest(query);
+    const result: any = await gqlHashnodeRequest(query);
     if (options.id) {
       result.data.draft.status = 'Draft';
     } else {
@@ -92,7 +92,7 @@ async function fetchPostsOrDrafts(
       }
     `;
 
-    const result = await gqlHashnodeRequest(query);
+    const result: any = await gqlHashnodeRequest(query);
 
     const posts = result.data.publication[type].edges.map(
       (edge: { node: any }) => edge.node

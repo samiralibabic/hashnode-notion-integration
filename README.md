@@ -20,13 +20,32 @@ Copy `.env.example` to `.env` and fill in the values:
 
 ```shell
 # Notion
-NOTION_DB_ID = '<notion_db_id>'
-NOTION_API_KEY = '<notion_api_key>'
+OAUTH_CLIENT_ID = '<notion_client_id>'
+OAUTH_CLIENT_SECRET = '<notion_client_secret>'
+OAUTH_REDIRECT_URL = 'https://localhost:3000/redirect'
 
 # Hashnode
 HASHNODE_PUBLICATION = '<hashnode_publication>'
 HASHNODE_API_KEY = '<hashnode_api_key>'
 ```
+
+You can find those values in your notion [integrations](https://www.notion.so/my-integrations) page.
+
+## SSL Certificates
+
+### Generate a private key
+
+```openssl genpkey -algorithm RSA -out localhost.key```
+
+### Generate a certificate signing request (CSR)
+
+```openssl req -new -key localhost.key -out localhost.csr```
+
+### Generate a self-signed certificate
+
+```openssl x509 -req -in localhost.csr -signkey localhost.key -out localhost.crt```
+
+Put them in a `ssl` folder in project root.
 
 ### Install dependencies
 
@@ -45,3 +64,5 @@ bun dev
 ```shell
 bun start
 ```
+
+The server will be running on `https://localhost:3000` and expects redirects with authorization code to `https://localhost:3000/redirect`.
