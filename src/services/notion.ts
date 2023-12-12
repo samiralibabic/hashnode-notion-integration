@@ -7,13 +7,11 @@ import {
   BlockObjectResponse,
   ChildDatabaseBlockObjectResponse,
   CreatePageResponse,
+  OauthTokenResponse,
   PageObjectResponse,
   PartialBlockObjectResponse,
 } from "@notionhq/client/build/src/api-endpoints.js";
 import { markdownToBlocks, markdownToRichText } from "@tryfabric/martian";
-
-//const notionKey = process.env.NOTION_API_KEY;
-//const pageId = process.env.NOTION_PAGE_ID;
 
 const clientId = process.env.OAUTH_CLIENT_ID;
 const clientSecret = process.env.OAUTH_CLIENT_SECRET;
@@ -24,38 +22,29 @@ if (!clientId || !clientSecret || !redirectUrl) {
   process.exit(1);
 }
 
-let notion: Client;
-
-export async function connectToNotion(authCode: string) {
-  const encoded = Buffer.from(`${clientId}:${clientSecret}`).toString("base64");
-  
-  const response = await fetch("https://api.notion.com/v1/oauth/token", {
-    method: "POST",
-    headers: {
-      Accept: "application/json",
-      "Content-Type": "application/json",
-      Authorization: `Basic ${encoded}`,
-    },
-    body: JSON.stringify({
-      grant_type: "authorization_code",
-      code: authCode,
-      redirect_uri: redirectUrl,
-    }),
-  });
-
-  const data: any = await response.json();
-  notion = new Client({ auth: data["access_token"] });
-  return data;
-}
+const notion = new Client();
 
 // getters
-export async function getSharedPage() {
+export async function getAccessToken(authCode: string) {
+  const token = notion.oauth.token({
+    grant_type: "authorization_code",
+    code: authCode,
+    redirect_uri: redirectUrl,
+    client_id: clientId as string,
+    client_secret: clientSecret as string,
+  });
+
+  return token;
+}
+
+export async function getSharedPage(accessToken: string) {
   try {
     const response = await notion.search({
       filter: {
         value: "page",
         property: "object",
       },
+      auth: accessToken,
     });
     const sharedParentPage = response.results.find(
       (page) => (page as PageObjectResponse).parent?.type === "workspace"
@@ -68,7 +57,8 @@ export async function getSharedPage() {
 }
 
 export async function getDatabaseFromPage(
-  page_id: string
+  page_id: string,
+  accessToken: string
 ): Promise<NotionPage> {
   let response: NotionPage = {
     hasContent: false,
@@ -78,6 +68,7 @@ export async function getDatabaseFromPage(
   try {
     const blockListResponse = await notion.blocks.children.list({
       block_id: page_id,
+      auth: accessToken,
     });
 
     if (blockListResponse.results.length !== 0) {
@@ -107,7 +98,27 @@ export async function getDatabaseFromPage(
   }
 }
 
-export async function createNewDatabase(parentPageId: string) {
+export async function fetchNotionDatabase(
+  database_id: string,
+  accessToken: string
+) {
+  try {
+    const response = await notion.databases.query({
+      database_id,
+      auth: accessToken,
+    });
+    return response.results;
+  } catch (error: any) {
+    console.error("Error fetching Notion database:", error.message);
+    throw error;
+  }
+}
+
+// setters
+export async function createNewDatabase(
+  parentPageId: string,
+  accessToken: string
+) {
   try {
     const response = await notion.databases.create({
       parent: {
@@ -144,6 +155,7 @@ export async function createNewDatabase(parentPageId: string) {
           },
         },
       },
+      auth: accessToken,
     });
     return response.id;
   } catch (error: any) {
@@ -152,18 +164,11 @@ export async function createNewDatabase(parentPageId: string) {
   }
 }
 
-export async function fetchNotionDatabase(database_id: string) {
-  try {
-    const response = await notion.databases.query({ database_id });
-    return response.results;
-  } catch (error: any) {
-    console.error("Error fetching Notion database:", error.message);
-    throw error;
-  }
-}
-
-// setters
-export async function postToNotionPage(draftData: ArticleData, pageId: string) {
+export async function postToNotionPage(
+  draftData: ArticleData,
+  pageId: string,
+  accessToken: string
+) {
   try {
     const { content } = draftData;
     const cleanMarkdown = content.markdown.replace(/ align="[^"]+"/g, "");
@@ -172,6 +177,7 @@ export async function postToNotionPage(draftData: ArticleData, pageId: string) {
     const notionResponse = await notion.blocks.children.append({
       block_id: pageId,
       children: notionBlocks as BlockObjectRequest[],
+      auth: accessToken
     });
     console.info("Response from Notion: ", notionResponse);
   } catch (error: any) {
@@ -182,7 +188,8 @@ export async function postToNotionPage(draftData: ArticleData, pageId: string) {
 
 export async function addPageToNotionDatabase(
   articleData: ArticleData,
-  databaseId: string
+  databaseId: string,
+  accessToken: string
 ) {
   try {
     const response = await notion.pages.create({
@@ -200,26 +207,11 @@ export async function addPageToNotionDatabase(
           },
         },
       },
+      auth: accessToken,
     });
     return response.id;
   } catch (error: any) {
     console.error("Error creating page:", error.message);
-    throw error;
-  }
-}
-
-export async function updateNotionPage(pageId: string, pageData: ArticleData) {
-  try {
-    const { content } = pageData;
-    const notionBlocks = markdownToBlocks(content.markdown);
-
-    const notionResponse = await notion.blocks.children.append({
-      block_id: pageId,
-      children: notionBlocks as BlockObjectRequest[],
-    });
-    console.info("Response from Notion: ", notionResponse);
-  } catch (error: any) {
-    console.error("Error updating Notion page:", error.message);
     throw error;
   }
 }

@@ -123,3 +123,28 @@ export async function fetchDrafts(
 ): Promise<PostsResponse> {
   return await fetchPostsOrDrafts(numResults, cursor, "drafts");
 }
+
+export async function fetchAll(
+  type: "posts" | "drafts" = "posts",
+  batchSize: number | string = 5
+) {
+  let posts = [];
+  let nextBatch: string | false = false;
+
+  do {
+    let response: any =
+      type === "posts"
+        ? await fetchPosts(
+            typeof batchSize === "number" ? batchSize : parseInt(batchSize),
+            nextBatch !== false ? nextBatch : undefined
+          )
+        : await fetchDrafts(
+            typeof batchSize === "number" ? batchSize : parseInt(batchSize),
+            nextBatch !== false ? nextBatch : undefined
+          );
+    posts.push(response.posts);
+    nextBatch = response.nextBatch;
+  } while (nextBatch);
+
+  return posts.flat();
+}
