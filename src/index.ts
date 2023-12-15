@@ -1,8 +1,4 @@
-import {
-  fetchAll,
-  fetchDraft,
-  fetchPost,
-} from "./services/hashnode.js";
+import { fetchAll, fetchDraft, fetchPost } from "./services/hashnode.js";
 import {
   addPageToNotionDatabase,
   getAccessToken,
@@ -12,7 +8,7 @@ import {
   getSharedPage,
   postToNotionPage,
 } from "./services/notion.js";
-import "./util/logger";
+import "./util/logger.ts";
 
 const userTokens: Map<string, string> = new Map();
 
@@ -21,23 +17,31 @@ Bun.serve({
     const url = new URL(req.url);
     const path = url.pathname;
     const error = url.searchParams.get("error");
+    const authCode = url.searchParams.get("code") as string;
 
     if (error) {
-      return new Response(`Something went wrong: ${error}`);
+      return new Response(`Something went wrong: ${error}`, { status: 400 });
+    }
+
+    if (path === "/redirect" && !authCode && !error) {
+      return new Response("Bad request.", { status: 400 });
     }
 
     if (path === "/redirect") {
-      const authCode = url.searchParams.get("code") as string;
       await init(authCode);
+      console.log("here");
       return new Response("Integration successful.");
     }
 
-    return new Response("404!");
+    return new Response("404!", { status: 404 });
   },
-  tls: {
-    key: Bun.file("./ssl/localhost.key"),
-    cert: Bun.file("./ssl/localhost.crt"),
-  },
+  tls:
+    process.env.NODE_ENV === "development"
+      ? {
+          key: Bun.file("./ssl/localhost.key"),
+          cert: Bun.file("./ssl/localhost.crt"),
+        }
+      : undefined,
 });
 
 async function init(authCode: string) {
@@ -72,17 +76,33 @@ async function syncHashnodeToNotion(accessToken: string, batchSize: number) {
     notionDbId = await createNewDatabase(sharedPage.id, accessToken); // or creates a new one if not found
   }
 
-  const notionDb: any[] = await fetchNotionDatabase(notionDbId as string, accessToken);
-  const notionArticleIds = notionDb
-    .map((page) => page.properties.hashnodeIdOrSlug.rich_text[0]?.plain_text)
-    .filter((id) => id);
+  const notionDb: any[] = await fetchNotionDatabase(
+    notionDbId as string,
+    accessToken
+  );
+  const notionArticles = notionDb.map((page) => {
+    return {
+      idOrSlug: page.properties.hashnodeIdOrSlug.rich_text[0]?.plain_text,
+      updatedAt: page.last_edited_time,
+    };
+  });
 
   const postSlugsToAdd = posts
-    .filter((post) => !notionArticleIds.includes(post.slug))
+    .filter((post) => {
+      const page = notionArticles.find((n) => n.idOrSlug === post.slug);
+      return (
+        !page ||
+        new Date(post.lastUpdated || post.publishedAt) >
+          new Date(page.updatedAt)
+      );
+    })
     .map((post) => post.slug);
 
   const draftIdsToAdd = drafts
-    .filter((draft) => !notionArticleIds.includes(draft.id))
+    .filter((draft) => {
+      const page = notionArticles.find((n) => n.idOrSlug === draft.id);
+      return !page || new Date(draft.lastUpdated) > new Date(page.updatedAt);
+    })
     .map((draft) => draft.id);
 
   const postPromises = postSlugsToAdd.map(
@@ -94,11 +114,21 @@ async function syncHashnodeToNotion(accessToken: string, batchSize: number) {
   const draftsToAdd = await Promise.all(draftPromises);
 
   postsToAdd.forEach(async (post) => {
-    let newPageId = await addPageToNotionDatabase(post, notionDbId as string, accessToken);
+    let newPageId = await addPageToNotionDatabase(
+      post,
+      notionDbId as string,
+      accessToken
+    );
     await postToNotionPage(post, newPageId, accessToken);
   });
   draftsToAdd.forEach(async (draft) => {
-    let newPageId = await addPageToNotionDatabase(draft, notionDbId as string, accessToken);
+    let newPageId = await addPageToNotionDatabase(
+      draft,
+      notionDbId as string,
+      accessToken
+    );
     await postToNotionPage(draft, newPageId, accessToken);
   });
 }
+
+export { init, syncHashnodeToNotion };

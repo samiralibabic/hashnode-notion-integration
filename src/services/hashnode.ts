@@ -41,6 +41,8 @@ async function fetchPostOrDraft(
           content {
             markdown
           }
+          updatedAt
+          ${options.id ? `` : `publishedAt`}
         }
       }
     ${options.id ? `` : `}`}
@@ -85,6 +87,8 @@ async function fetchPostsOrDrafts(
               node {
                 id
                 slug
+                updatedAt
+                ${type === "drafts" ? `` : `publishedAt`}
               }
             }
           }
