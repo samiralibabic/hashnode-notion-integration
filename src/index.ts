@@ -11,7 +11,9 @@ import {
 import userTokens from "./model/UserTokens.js";
 import "./util/logger.js";
 
-Bun.serve({
+console.log(`Starting ${Bun.env.NODE_ENV} server.`);
+
+Bun.serve({  
   async fetch(req) {
     const url = new URL(req.url);
     const path = url.pathname;
@@ -34,7 +36,7 @@ Bun.serve({
     return new Response("404!", { status: 404 });
   },
   tls:
-    process.env.NODE_ENV === "development"
+    Bun.env.NODE_ENV === "development"
       ? {
           key: Bun.file("./ssl/localhost.key"),
           cert: Bun.file("./ssl/localhost.crt"),
@@ -130,4 +132,5 @@ async function syncHashnodeToNotion(accessToken: string, batchSize: number) {
   });
 }
 
+// for testing only
 export { init, syncHashnodeToNotion };
