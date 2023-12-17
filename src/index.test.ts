@@ -1,4 +1,10 @@
-import { describe, test, expect, mock, jest } from "bun:test";
+import {
+  describe,
+  test,
+  expect,
+  mock,
+  jest,
+} from "bun:test";
 import { init } from "./index.js";
 
 describe("Bun.serve", () => {
@@ -20,7 +26,7 @@ describe("Bun.serve", () => {
 
   test("returns 200 and calls init when authorization code hits '/redirect' endpoint", async () => {
     const request = "http://localhost:3000/redirect?code=123";
-    mock.module(require.resolve('./index.js'), () => ({
+    mock.module(require.resolve("./index.js"), () => ({
       init: jest.fn(),
     }));
 
@@ -39,5 +45,3 @@ describe("Bun.serve", () => {
     expect(response.status).toBe(404);
   });
 });
-
-

@@ -8,9 +8,8 @@ import {
   getSharedPage,
   postToNotionPage,
 } from "./services/notion.js";
-import "./util/logger.ts";
-
-const userTokens: Map<string, string> = new Map();
+import userTokens from "./model/UserTokens.js";
+import "./util/logger.js";
 
 Bun.serve({
   async fetch(req) {
@@ -29,7 +28,6 @@ Bun.serve({
 
     if (path === "/redirect") {
       await init(authCode);
-      console.log("here");
       return new Response("Integration successful.");
     }
 
@@ -49,6 +47,7 @@ async function init(authCode: string) {
     const response = await getAccessToken(authCode);
     // TODO: check if token is expired and refresh if true
     userTokens.set(response.bot_id, response.access_token);
+    
 
     setInterval(() => syncHashnodeToNotion(response.access_token, 10), 5000);
   } catch (error: any) {
