@@ -67,13 +67,13 @@ bun start
 
 ### Test
 
-When .env does not exist:
+When `.env` does not exist:
 
 ```shell
 bun run test
 ```
 
-or, when .env exists:
+or, when `.env` exists:
 
 ```shell
 bun test
