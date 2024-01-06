@@ -23,7 +23,7 @@ import {
 import { fetchAll, fetchDraft, fetchPost } from "./services/hashnode.js";
 import userTokens from "./model/UserTokens.js";
 
-describe("init", async () => {
+describe("init", () => {
   let originalSetInterval: any;
 
   beforeEach(() => {
@@ -54,6 +54,8 @@ describe("init", async () => {
 
     expect(userTokens.set).toHaveBeenCalledTimes(1);
     expect(userTokens.get("TeslaBot")).toBe("XAE12");
+
+    userTokens.set.mockRestore();
   });
 
   test("calls setInterval with syncHashnodeToNotion every 5 seconds", async () => {
@@ -63,7 +65,7 @@ describe("init", async () => {
   });
 });
 
-describe("syncHashnodeToNotion", async () => {
+describe("syncHashnodeToNotion", () => {
   beforeEach(() => {
     // mock dependencies
     mock.module(require.resolve("./services/notion.js"), () => ({
@@ -107,14 +109,30 @@ describe("syncHashnodeToNotion", async () => {
   });
 
   test("when sharedPage not found then the program exits", async () => {
-    mock.module(require.resolve("./services/notion.js"), () => ({
+    // Mock getSharedPage to return null
+    mock.module(require.resolve("./services/notion.ts"), () => ({
       getSharedPage: jest.fn()
     }));
-    mock(process.exit());
+    // Spy on console.error to check the log message
+    const consoleErrorSpy = spyOn(console, "error").mockImplementation();
 
-    await syncHashnodeToNotion("123", 5);
+    // Spy on process.exit
+    const exitSpy = spyOn(process, "exit").mockImplementation((code) => {
+      expect(code).toBe(1); // Ensure process.exit is called with code 1
+    });
 
-    expect(syncHashnodeToNotion).toThrow();
-    expect(process.exit).toHaveBeenCalledWith(1);
+    try {
+      await syncHashnodeToNotion("fakeAccessToken", 5);
+      // The function should exit before reaching this line
+      expect(true).toBe(false);
+    } catch (error) {
+      // Expect the error message logged by console.error
+      expect(consoleErrorSpy).toHaveBeenCalledWith("No shared page found in Notion");
+    } finally {
+      // Restore the spies
+      consoleErrorSpy.mockRestore();
+      exitSpy.mockRestore();
+    }
   });
-})
+
+});
