@@ -135,4 +135,19 @@ describe("syncHashnodeToNotion", () => {
     }
   });
 
+  test("when database does not exist then new database is created", async () => {
+    mock.module(require.resolve("./services/notion.ts"), () => ({
+      getDatabaseFromPage: jest.fn().mockReturnValue({
+        hasDatabase: false,
+        hasContetn: false
+      })
+    }))
+
+    await syncHashnodeToNotion("token", 3);
+
+    expect(createNewDatabase).toHaveBeenCalledTimes(1);
+  });
+
+
+
 });
