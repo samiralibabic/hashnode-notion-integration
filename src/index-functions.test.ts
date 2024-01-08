@@ -109,16 +109,13 @@ describe("syncHashnodeToNotion", () => {
   });
 
   test("when sharedPage not found then the program exits", async () => {
-    // Mock getSharedPage to return null
     mock.module(require.resolve("./services/notion.ts"), () => ({
       getSharedPage: jest.fn()
     }));
-    // Spy on console.error to check the log message
     const consoleErrorSpy = spyOn(console, "error").mockImplementation();
 
-    // Spy on process.exit
     const exitSpy = spyOn(process, "exit").mockImplementation((code) => {
-      expect(code).toBe(1); // Ensure process.exit is called with code 1
+      expect(code).toBe(1); 
     });
 
     try {
@@ -126,10 +123,8 @@ describe("syncHashnodeToNotion", () => {
       // The function should exit before reaching this line
       expect(true).toBe(false);
     } catch (error) {
-      // Expect the error message logged by console.error
       expect(consoleErrorSpy).toHaveBeenCalledWith("No shared page found in Notion");
     } finally {
-      // Restore the spies
       consoleErrorSpy.mockRestore();
       exitSpy.mockRestore();
     }
@@ -148,6 +143,43 @@ describe("syncHashnodeToNotion", () => {
     expect(createNewDatabase).toHaveBeenCalledTimes(1);
   });
 
+  test("always fetches the notion database", async () => {
+    await syncHashnodeToNotion("token", 3);
 
+    expect(fetchNotionDatabase).toHaveBeenCalledTimes(1);
+  });
+
+  test("when there are drafts or posts to add then fetches their content", async () => {
+    mock.module(require.resolve("./services/hashnode.js"), () => ({
+      fetchAll: jest.fn().mockReturnValueOnce([{
+        slug: "abc",
+      }]).mockReturnValueOnce([{
+        id: 123
+      }]),
+      fetchDraft: jest.fn(),
+      fetchPost: jest.fn()
+    }))
+
+    await syncHashnodeToNotion("token", 3);
+
+    expect(fetchPost).toHaveBeenCalledTimes(1);
+    expect(fetchDraft).toHaveBeenCalledTimes(1);
+  });
+
+  test("when posts or drafts exist then posts them to notion page", async () => {
+    mock.module(require.resolve("./services/hashnode.js"), () => ({
+      fetchAll: jest.fn().mockReturnValueOnce([{
+        slug: "abc",
+      }]).mockReturnValueOnce([{
+        id: 123
+      }]),
+      fetchDraft: jest.fn(),
+      fetchPost: jest.fn()
+    }))
+
+    await syncHashnodeToNotion("token", 3);
+
+    expect(postToNotionPage).toHaveBeenCalledTimes(2);
+  });
 
 });
