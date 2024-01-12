@@ -133,3 +133,6 @@ dist
 .ssl
 /ssl
 ssl
+
+# MacOS "Desktop Services Store" files
+.DS_Store

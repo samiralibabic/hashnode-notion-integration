@@ -1,23 +1,23 @@
 import {
-  describe,
-  test,
-  expect,
-  mock,
-  jest,
-  spyOn,
-  beforeEach,
   afterEach,
+  beforeEach,
+  describe,
+  expect,
+  jest,
+  mock,
+  spyOn,
+  test,
 } from "bun:test";
 import { init, syncHashnodeToNotion } from "./index.js";
 
 // import dependencies, mock different return values for each case
 import {
-  getAccessToken,
-  getSharedPage,
-  getDatabaseFromPage,
-  fetchNotionDatabase,
   addPageToNotionDatabase,
   createNewDatabase,
+  fetchNotionDatabase,
+  getAccessToken,
+  getDatabaseFromPage,
+  getSharedPage,
   postToNotionPage,
 } from "./services/notion.js";
 import { fetchAll, fetchDraft, fetchPost } from "./services/hashnode.js";
@@ -32,7 +32,10 @@ describe("init", () => {
     (global as any).setInterval = setIntervalMock;
 
     mock.module(require.resolve("./services/notion.js"), () => ({
-      getAccessToken: jest.fn().mockReturnValue({ bot_id: "TeslaBot", access_token: "XAE12" }),
+      getAccessToken: jest.fn().mockReturnValue({
+        bot_id: "TeslaBot",
+        access_token: "XAE12",
+      }),
     }));
   });
 
@@ -74,19 +77,19 @@ describe("syncHashnodeToNotion", () => {
         res: {
           hasDatabase: true,
           database: {
-            id: "db1"
-          }
-        }
+            id: "db1",
+          },
+        },
       }),
       fetchNotionDatabase: jest.fn().mockReturnValue([{
         properties: {
           hashnodeIdOrSlug: {
             rich_text: [{
-              plain_text: "Article1"
-            }]
+              plain_text: "Article1",
+            }],
           },
         },
-        last_edited_time: new Date()
+        last_edited_time: new Date(),
       }]),
       addPageToNotionDatabase: jest.fn(),
       createNewDatabase: jest.fn(),
@@ -110,12 +113,12 @@ describe("syncHashnodeToNotion", () => {
 
   test("when sharedPage not found then the program exits", async () => {
     mock.module(require.resolve("./services/notion.ts"), () => ({
-      getSharedPage: jest.fn()
+      getSharedPage: jest.fn(),
     }));
     const consoleErrorSpy = spyOn(console, "error").mockImplementation();
 
     const exitSpy = spyOn(process, "exit").mockImplementation((code) => {
-      expect(code).toBe(1); 
+      expect(code).toBe(1);
     });
 
     try {
@@ -123,7 +126,9 @@ describe("syncHashnodeToNotion", () => {
       // The function should exit before reaching this line
       expect(true).toBe(false);
     } catch (error) {
-      expect(consoleErrorSpy).toHaveBeenCalledWith("No shared page found in Notion");
+      expect(consoleErrorSpy).toHaveBeenCalledWith(
+        "No shared page found in Notion",
+      );
     } finally {
       consoleErrorSpy.mockRestore();
       exitSpy.mockRestore();
@@ -134,9 +139,9 @@ describe("syncHashnodeToNotion", () => {
     mock.module(require.resolve("./services/notion.ts"), () => ({
       getDatabaseFromPage: jest.fn().mockReturnValue({
         hasDatabase: false,
-        hasContetn: false
-      })
-    }))
+        hasContetn: false,
+      }),
+    }));
 
     await syncHashnodeToNotion("token", 3);
 
@@ -154,11 +159,11 @@ describe("syncHashnodeToNotion", () => {
       fetchAll: jest.fn().mockReturnValueOnce([{
         slug: "abc",
       }]).mockReturnValueOnce([{
-        id: 123
+        id: 123,
       }]),
       fetchDraft: jest.fn(),
-      fetchPost: jest.fn()
-    }))
+      fetchPost: jest.fn(),
+    }));
 
     await syncHashnodeToNotion("token", 3);
 
@@ -171,15 +176,14 @@ describe("syncHashnodeToNotion", () => {
       fetchAll: jest.fn().mockReturnValueOnce([{
         slug: "abc",
       }]).mockReturnValueOnce([{
-        id: 123
+        id: 123,
       }]),
       fetchDraft: jest.fn(),
-      fetchPost: jest.fn()
-    }))
+      fetchPost: jest.fn(),
+    }));
 
     await syncHashnodeToNotion("token", 3);
 
     expect(postToNotionPage).toHaveBeenCalledTimes(2);
   });
-
 });
