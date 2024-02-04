@@ -8,7 +8,7 @@ import {
   getSharedPage,
   postToNotionPage,
 } from "./notion.js";
-import "./util/logger.js";
+import "../util/logger.js";
 
 export async function syncHashnodeToNotion(userProfile: UserProfile, batchSize: number) {
   // fetch posts and drafts from Hashnode

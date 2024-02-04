@@ -74,9 +74,9 @@ async function notion(req: Request, hashionDb: Database): Promise<Response> {
 
     try {
       const tokenResponse = await getAccessToken(url.searchParams.get('code') as string);
-      console.log('Received access token: ', tokenResponse);
+      console.log('Received token: ', tokenResponse);
       const uuid = url.searchParams.get('state');
-      console.log(`Saving UUID ${uuid} and token ${tokenResponse} to database...`);
+      console.log(`Saving UUID ${uuid} and access token ${tokenResponse.access_token} to database...`);
 
       let userProfile: UserProfile | null = selectByUuid(hashionDb, uuid as string);
 
@@ -100,12 +100,13 @@ async function notion(req: Request, hashionDb: Database): Promise<Response> {
     } catch (error) {
       console.error('Could not exchange authorization code for access token.', (error as Error).message);
 
-      return new Response('Internal server error.' { status: 500 });
+      return new Response('Internal server error.', { status: 500 });
     }
   }
 
   return new Response("Bad request.", { status: 400 });
 }
+
 /**
  * Verifies if UUID is present in a Databse
  * @param {Request} req - The HTTP request object containing UUID to verify
