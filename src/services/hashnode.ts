@@ -1,26 +1,15 @@
 import { ArticleData } from "../model/ArticleData.js";
+import { PostsResponse, HashnodeQueryOptions } from "../model/HashnodeData.js";
+import { UserProfile } from "../model/UserProfile.js";
 
-const hashnodeKey = process.env.HASHNODE_API_KEY;
-const hashnodePublication = process.env.HASHNODE_PUBLICATION;
-
-if (!hashnodeKey) {
-  console.error("HASHNODE_API_KEY not found in .env!");
-  process.exit(1);
-}
-
-if (!hashnodePublication) {
-  console.error("HASHNODE_PUBLICATION not found in .env!");
-  process.exit(1);
-}
-
-async function gqlHashnodeRequest(query: string) {
+async function gqlHashnodeRequest(userProfile: UserProfile, query: string) {
   const data = JSON.stringify({ query });
 
   const response = await fetch("https://gql.hashnode.com/", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
-      Authorization: `${hashnodeKey}`,
+      Authorization: `${userProfile.hashnode_key}`,
     },
     body: data,
   });
@@ -34,32 +23,17 @@ async function gqlHashnodeRequest(query: string) {
   return result;
 }
 
-interface Post {
-  id: string;
-  slug: string;
-}
-
-interface PostsResponse {
-  posts: Post[];
-  nextBatch: string | boolean;
-}
-
-interface HashnodeQueryOptions {
-  id?: string;
-  slug?: string;
-}
-
 async function fetchPostOrDraft(
+  userProfile: UserProfile,
   options: HashnodeQueryOptions
 ): Promise<ArticleData> {
   try {
     const query = `
       {
-        ${
-          options.id
-            ? `draft(id: "${options.id}")`
-            : `publication(host: "${hashnodePublication}") { post(slug: "${options.slug}")`
-        }
+        ${options.id
+        ? `draft(id: "${options.id}")`
+        : `publication(host: "${userProfile.hashnode_publication}") { post(slug: "${options.slug}")`
+      }
         {
           idOrSlug: ${options.id ? `id` : `slug`}
           title
@@ -74,7 +48,7 @@ async function fetchPostOrDraft(
     ${options.id ? `` : `}`}
     `;
 
-    const result: any = await gqlHashnodeRequest(query);
+    const result: any = await gqlHashnodeRequest(userProfile, query);
     if (options.id) {
       result.data.draft.status = 'Draft';
     } else {
@@ -87,15 +61,16 @@ async function fetchPostOrDraft(
   }
 }
 
-export async function fetchDraft(draftId: string): Promise<ArticleData> {
-  return fetchPostOrDraft({ id: draftId });
+export async function fetchDraft(userProfile: UserProfile, draftId: string): Promise<ArticleData> {
+  return fetchPostOrDraft(userProfile, { id: draftId });
 }
 
-export async function fetchPost(postSlug: string): Promise<ArticleData> {
-  return fetchPostOrDraft({ slug: postSlug });
+export async function fetchPost(userProfile: UserProfile, postSlug: string): Promise<ArticleData> {
+  return fetchPostOrDraft(userProfile, { slug: postSlug });
 }
 
 async function fetchPostsOrDrafts(
+  userProfile: UserProfile,
   numResults: number,
   cursor?: string,
   type: "posts" | "drafts" = "posts"
@@ -103,7 +78,7 @@ async function fetchPostsOrDrafts(
   try {
     const query = `
       {
-        publication(host:"${hashnodePublication}") {
+        publication(host:"${userProfile.hashnode_publication}") {
           ${type}(first: ${numResults}${cursor ? `, after: "${cursor}"` : ""}) {
             pageInfo {
               hasNextPage
@@ -122,7 +97,7 @@ async function fetchPostsOrDrafts(
       }
     `;
 
-    const result: any = await gqlHashnodeRequest(query);
+    const result: any = await gqlHashnodeRequest(userProfile, query);
 
     const posts = result.data.publication[type].edges.map(
       (edge: { node: any }) => edge.node
@@ -141,20 +116,23 @@ async function fetchPostsOrDrafts(
 }
 
 export async function fetchPosts(
+  userProfile: UserProfile,
   numResults: number,
   cursor?: string
 ): Promise<PostsResponse> {
-  return await fetchPostsOrDrafts(numResults, cursor, "posts");
+  return await fetchPostsOrDrafts(userProfile, numResults, cursor, "posts");
 }
 
 export async function fetchDrafts(
+  userProfile: UserProfile,
   numResults: number,
   cursor?: string
 ): Promise<PostsResponse> {
-  return await fetchPostsOrDrafts(numResults, cursor, "drafts");
+  return await fetchPostsOrDrafts(userProfile, numResults, cursor, "drafts");
 }
 
 export async function fetchAll(
+  userProfile: UserProfile,
   type: "posts" | "drafts" = "posts",
   batchSize: number | string = 5
 ) {
@@ -165,13 +143,15 @@ export async function fetchAll(
     let response: any =
       type === "posts"
         ? await fetchPosts(
-            typeof batchSize === "number" ? batchSize : parseInt(batchSize),
-            nextBatch !== false ? nextBatch : undefined
-          )
+          userProfile,
+          typeof batchSize === "number" ? batchSize : parseInt(batchSize),
+          nextBatch !== false ? nextBatch : undefined
+        )
         : await fetchDrafts(
-            typeof batchSize === "number" ? batchSize : parseInt(batchSize),
-            nextBatch !== false ? nextBatch : undefined
-          );
+          userProfile,
+          typeof batchSize === "number" ? batchSize : parseInt(batchSize),
+          nextBatch !== false ? nextBatch : undefined
+        );
     posts.push(response.posts);
     nextBatch = response.nextBatch;
   } while (nextBatch);
