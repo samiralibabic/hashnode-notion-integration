@@ -8,70 +8,17 @@ import {
   spyOn,
   test,
 } from "bun:test";
-import { init, syncHashnodeToNotion } from "./index.js";
 
-// import dependencies, mock different return values for each case
-import {
-  addPageToNotionDatabase,
-  createNewDatabase,
-  fetchNotionDatabase,
-  getAccessToken,
-  getDatabaseFromPage,
-  getSharedPage,
-  postToNotionPage,
-} from "./services/notion.js";
-import { fetchAll, fetchDraft, fetchPost } from "./services/hashnode.js";
-import userTokens from "./model/UserTokens.js";
+import { fetchNotionDatabase, createNewDatabase, postToNotionPage} from "./notion.js";
+import { fetchAll, fetchDraft, fetchPost } from "./hashnode.js";
+import { UserProfile } from "../model/UserProfile.js";
 
-describe("init", () => {
-  let originalSetInterval: any;
-
-  beforeEach(() => {
-    originalSetInterval = global.setInterval;
-    const setIntervalMock = jest.fn();
-    (global as any).setInterval = setIntervalMock;
-
-    mock.module(require.resolve("./services/notion.js"), () => ({
-      getAccessToken: jest.fn().mockReturnValue({
-        bot_id: "TeslaBot",
-        access_token: "XAE12",
-      }),
-    }));
-  });
-
-  afterEach(() => {
-    (global as any).setInterval = originalSetInterval;
-    jest.restoreAllMocks();
-  });
-
-  test("always calls getAccessToken with authCode", async () => {
-    await init("123");
-
-    expect(getAccessToken).toHaveBeenCalledWith("123");
-  });
-
-  test("when response 200 then stores access_token in userTokens", async () => {
-    spyOn(userTokens, "set");
-
-    await init("123");
-
-    expect(userTokens.set).toHaveBeenCalledTimes(1);
-    expect(userTokens.get("TeslaBot")).toBe("XAE12");
-
-    userTokens.set.mockRestore();
-  });
-
-  test("calls setInterval with syncHashnodeToNotion every 5 seconds", async () => {
-    await init("123");
-
-    expect(setInterval).toHaveBeenCalledTimes(1);
-  });
-});
+import { syncHashnodeToNotion } from "./sync.js";
 
 describe("syncHashnodeToNotion", () => {
   beforeEach(() => {
     // mock dependencies
-    mock.module(require.resolve("./services/notion.js"), () => ({
+    mock.module(require.resolve("./notion.js"), () => ({
       getSharedPage: jest.fn().mockReturnValue({ id: "123abc" }),
       getDatabaseFromPage: jest.fn().mockReturnValue({
         res: {
@@ -96,7 +43,7 @@ describe("syncHashnodeToNotion", () => {
       postToNotionPage: jest.fn(),
     }));
 
-    mock.module(require.resolve("./services/hashnode.js"), () => ({
+    mock.module(require.resolve("./hashnode.js"), () => ({
       fetchAll: jest.fn().mockReturnValue([]),
     }));
   });
@@ -106,23 +53,37 @@ describe("syncHashnodeToNotion", () => {
   });
 
   test("always fetches all posts and drafts", async () => {
-    await syncHashnodeToNotion("123", 5);
+    let userProfile: UserProfile = {
+      uuid: "123",
+      hashnode_publication: '',
+      hashnode_key: '',
+      notion_oauth_refresh_token: '',
+      notion_oauth_access_token: ''
+    }
+    await syncHashnodeToNotion(userProfile, 5);
 
     expect(fetchAll).toHaveBeenCalledTimes(2);
   });
 
   test("when sharedPage not found then the program exits", async () => {
-    mock.module(require.resolve("./services/notion.ts"), () => ({
+    mock.module(require.resolve("./notion.ts"), () => ({
       getSharedPage: jest.fn(),
     }));
-    const consoleErrorSpy = spyOn(console, "error").mockImplementation();
+    let userProfile: UserProfile = {
+      uuid: "123",
+      hashnode_publication: '',
+      hashnode_key: '',
+      notion_oauth_refresh_token: '',
+      notion_oauth_access_token: ''
+    }
+    const consoleErrorSpy = spyOn(console, "error").mockImplementation(jest.fn());
 
     const exitSpy = spyOn(process, "exit").mockImplementation((code) => {
       expect(code).toBe(1);
     });
 
     try {
-      await syncHashnodeToNotion("fakeAccessToken", 5);
+      await syncHashnodeToNotion(userProfile, 5);
       // The function should exit before reaching this line
       expect(true).toBe(false);
     } catch (error) {
@@ -136,26 +97,41 @@ describe("syncHashnodeToNotion", () => {
   });
 
   test("when database does not exist then new database is created", async () => {
-    mock.module(require.resolve("./services/notion.ts"), () => ({
+    mock.module(require.resolve("./notion.ts"), () => ({
       getDatabaseFromPage: jest.fn().mockReturnValue({
         hasDatabase: false,
         hasContetn: false,
       }),
     }));
 
-    await syncHashnodeToNotion("token", 3);
+    let userProfile: UserProfile = {
+      uuid: "123",
+      hashnode_publication: '',
+      hashnode_key: '',
+      notion_oauth_refresh_token: '',
+      notion_oauth_access_token: ''
+    }
+
+    await syncHashnodeToNotion(userProfile, 3);
 
     expect(createNewDatabase).toHaveBeenCalledTimes(1);
   });
 
   test("always fetches the notion database", async () => {
-    await syncHashnodeToNotion("token", 3);
+    let userProfile: UserProfile = {
+      uuid: "123",
+      hashnode_publication: '',
+      hashnode_key: '',
+      notion_oauth_refresh_token: '',
+      notion_oauth_access_token: ''
+    }
+    await syncHashnodeToNotion(userProfile, 3);
 
     expect(fetchNotionDatabase).toHaveBeenCalledTimes(1);
   });
 
   test("when there are drafts or posts to add then fetches their content", async () => {
-    mock.module(require.resolve("./services/hashnode.js"), () => ({
+    mock.module(require.resolve("./hashnode.js"), () => ({
       fetchAll: jest.fn().mockReturnValueOnce([{
         slug: "abc",
       }]).mockReturnValueOnce([{
@@ -165,14 +141,21 @@ describe("syncHashnodeToNotion", () => {
       fetchPost: jest.fn(),
     }));
 
-    await syncHashnodeToNotion("token", 3);
+    let userProfile: UserProfile = {
+      uuid: "123",
+      hashnode_publication: '',
+      hashnode_key: '',
+      notion_oauth_refresh_token: '',
+      notion_oauth_access_token: ''
+    }
+    await syncHashnodeToNotion(userProfile, 3);
 
     expect(fetchPost).toHaveBeenCalledTimes(1);
     expect(fetchDraft).toHaveBeenCalledTimes(1);
   });
 
   test("when posts or drafts exist then posts them to notion page", async () => {
-    mock.module(require.resolve("./services/hashnode.js"), () => ({
+    mock.module(require.resolve("./hashnode.js"), () => ({
       fetchAll: jest.fn().mockReturnValueOnce([{
         slug: "abc",
       }]).mockReturnValueOnce([{
