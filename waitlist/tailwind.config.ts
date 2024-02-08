@@ -9,6 +9,9 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
+        'blue-ribbon': '#1051E9',
+        'jordy-blue': '#81A4F5',
+        'pattens-blue': '#DBEAFE',
         'black-pearl': '#010209',
         'pale-sky': '#6E7581',
         'ghost': '#C8CBD0',

@@ -2,3 +2,35 @@
 @tailwind components;
 @tailwind utilities;
 
+@layer base {
+  body {
+    @apply tracking-wide;
+  }
+
+  h1,
+  h2,
+  h3 {
+    @apply text-black-pearl;
+  }
+
+  h1 {
+    @apply font-semibold text-5xl;
+  }
+
+  a {
+    @apply hover:text-jordy-blue;
+  }
+
+  p {
+    @apply text-pale-sky;
+  }
+
+  header {
+    @apply border-b border-ghost px-10 py-5;
+  }
+
+  section {
+    @apply w-screen grid grid-cols-1 text-center p-5;
+  }
+
+}

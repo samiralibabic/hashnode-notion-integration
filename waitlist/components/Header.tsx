@@ -3,9 +3,9 @@ import Image from "next/image";
 export default function Header() {
   return (
     <header>
-      <div className="grid grid-flow-col p-4 h-20 items-center border-b border-ghost">
+      <div className="grid grid-flow-col h-20 items-center">
         <div className="flex items-center">
-          <div className="relative w-10 h-10 mr-2">
+          <div className="relative w-16 h-16 mr-4">
             <Image
               src="/logo-icon.svg" 
               alt="Hasion logo"
@@ -17,8 +17,8 @@ export default function Header() {
           </span>
         </div>
         <menu className="flex justify-end space-x-8 text-pale-sky">
-          <li className="text-right">Features</li>{" "}
-          <li className="text-right">Contact</li>{" "}
+          <a href="#features"><li className="text-right">Features</li></a>
+          <a href="#contact"><li className="text-right">Contact</li></a>
         </menu>
       </div>
     </header>
