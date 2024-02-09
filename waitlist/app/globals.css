@@ -10,13 +10,20 @@
   h1,
   h2,
   h3 {
-    @apply text-black-pearl;
+    @apply font-semibold text-black-pearl;
   }
 
   h1 {
-    @apply font-semibold text-5xl;
+    @apply font-semibold text-5xl leading-snug;
   }
 
+  h2 {
+    @apply font-semibold text-3xl;
+  }
+
+  h3 {
+    @apply leading-relaxed;
+  }
   a {
     @apply hover:text-jordy-blue;
   }

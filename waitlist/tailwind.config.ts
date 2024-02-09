@@ -15,6 +15,7 @@ const config: Config = {
         'black-pearl': '#010209',
         'pale-sky': '#6E7581',
         'ghost': '#C8CBD0',
+        'athens-gray': '#F9FAFB',
       }
     },
   },
