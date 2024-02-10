@@ -136,3 +136,6 @@ ssl
 
 # MacOS "Desktop Services Store" files
 .DS_Store
+
+# mailoctopus API key
+.etc
