@@ -8,7 +8,7 @@ import { toast } from "react-hot-toast";
 
 interface EmailFormProps {
   text: string;
-  textColor: string;
+  textColor?: string;
   icons: boolean;
   legal: boolean;
 }
