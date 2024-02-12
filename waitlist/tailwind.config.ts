@@ -16,6 +16,7 @@ const config: Config = {
         'pale-sky': '#6E7581',
         'ghost': '#C8CBD0',
         'athens-gray': '#F9FAFB',
+        'ebony': '#111827',
       }
     },
   },

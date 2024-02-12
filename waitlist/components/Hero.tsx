@@ -13,7 +13,11 @@ export default function Hero() {
           Turn your Hashnode blog into a Notion database and manage it together
           with everything else.
         </p>
-        <EmailForm />
+        <EmailForm
+          text="Join many others on the waitlist"
+          icons={true}
+          legal={true}
+        />
         <div className="relative w-[120%] h-[80vw] -mt-20">
           <Image
             src="hero-icons.svg"
