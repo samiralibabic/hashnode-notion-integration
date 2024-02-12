@@ -3,6 +3,9 @@
 @tailwind utilities;
 
 @layer base {
+  html {
+    @apply scroll-smooth;
+  }
   body {
     @apply tracking-wide;
   }
@@ -24,6 +27,7 @@
   h3 {
     @apply leading-relaxed;
   }
+
   a {
     @apply hover:text-jordy-blue;
   }
@@ -36,8 +40,19 @@
     @apply border-b border-ghost px-10 py-5;
   }
 
-  section, footer {
+  section,
+  footer {
     @apply w-screen grid grid-cols-1 text-center p-5;
   }
 
+  @media (prefers-color-scheme: dark) {
+
+    body {
+      @apply !bg-white;
+    }
+
+    .next-error-h1 {
+      border-right: 1px solid black !important;
+    }
+  }
 }
