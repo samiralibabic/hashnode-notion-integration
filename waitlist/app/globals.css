@@ -6,6 +6,7 @@
   html {
     @apply scroll-smooth;
   }
+
   body {
     @apply tracking-wide;
   }
@@ -14,6 +15,14 @@
   h2,
   h3 {
     @apply font-semibold text-black-pearl;
+  }
+
+  .legal h2 {
+    @apply mb-5;
+  }
+
+  .legal h3 {
+    @apply mt-10 mb-5;
   }
 
   h1 {
@@ -28,16 +37,22 @@
     @apply leading-relaxed;
   }
 
-  a {
-    @apply hover:text-jordy-blue;
+  a,
+  a li {
+    @apply text-black-pearl hover:text-ghost;
   }
 
-  p {
-    @apply text-pale-sky;
+  button {
+    @apply flex items-center justify-center gap-1 rounded-lg text-orangina hover:text-ghost text-xl px-4 py-2 my-5 font-semibold transition-all z-50;
+  }
+
+  p,
+  li {
+    @apply text-grey-sky;
   }
 
   header {
-    @apply border-b border-ghost px-10 py-5;
+    @apply border-b border-grey-sky px-10 py-5;
   }
 
   section,
@@ -46,7 +61,6 @@
   }
 
   @media (prefers-color-scheme: dark) {
-
     body {
       @apply !bg-white;
     }

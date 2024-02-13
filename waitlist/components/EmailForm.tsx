@@ -96,7 +96,7 @@ export default function EmailForm(
               </div>
             )}
             <button
-              className="flex w-50 h-14 items-center justify-center gap-1 rounded-lg bg-pattens-blue text-blue-ribbon text-xl px-4 py-2 my-5 font-semibold transition-all"
+              className="w-50 h-14 bg-black-pearl"
               type="submit"
             >
               <span>Join the waitlist</span>

@@ -1,139 +1,140 @@
 import Header from "@/components/Header";
 import Link from "next/link";
+import { ArrowLeftIcon } from "@radix-ui/react-icons";
 
 export default function Privacy() {
   return (
     <>
       <Header />
-      <Link href="/">Back</Link>
-
-      <section>
-        <h1>Datenschutzerklärung für die Online-Warteliste</h1>
+      <Link className="flex m-5 items-center" href="/">
+        <ArrowLeftIcon className="mr-2" />Back
+      </Link>
+      <section className="legal text-left">
+        <h2>Privacy Policy</h2>
         <p>
-          Diese Datenschutzerklärung beschreibt, wie wir personenbezogene Daten
-          gemäß den Anforderungen der Datenschutz-Grundverordnung (DSGVO) der
-          Europäischen Union sammeln, verwenden und offenlegen, wenn Sie unsere
-          Online-Warteliste nutzen.
+          This Privacy Policy describes how we collect, use, and disclose
+          personal data in accordance with the requirements of the General Data
+          Protection Regulation (GDPR) of the European Union when you use our
+          online waiting list.
         </p>
 
-        <h2>1. Verantwortliche Stelle</h2>
+        <h3>1. Data Controller</h3>
 
         <p>
-          Verantwortlich für die Datenverarbeitung im Sinne der DSGVO ist:
+          The data controller responsible for data processing within the meaning
+          of the GDPR is:
         </p>
 
         <p>
-          [Name/Firma des Verantwortlichen]<br />
-          [Adresse]<br />
-          [Email-Adresse]<br />
-          [Telefonnummer]
+          Dipl.-Ing. Samir Alibabic – Online Marketing <br />
+          hashion.site <br />
+          Klugstraße 99 <br />
+          80637 Munich <br />
+          kontakt@hashion.site
         </p>
 
-        <h2>2. Welche Daten wir sammeln</h2>
+        <h3>2. What Data We Collect</h3>
 
         <p>
-          Wir sammeln und verarbeiten möglicherweise folgende Arten von
-          personenbezogenen Daten für die Verwendung auf unserer Warteliste:
-        </p>
-
-        <ul>
-          <li>
-            Persönliche Identifikationsinformationen (z. B. Name,
-            E-Mail-Adresse, Telefonnummer)
-          </li>
-          <li>
-            Demografische Informationen (z. B. Alter, Geschlecht, Standort)
-          </li>
-          <li>
-            Andere Informationen, die Sie uns freiwillig zur Verfügung stellen
-          </li>
-        </ul>
-
-        <h2>3. Zwecke und Rechtsgrundlagen der Datenverarbeitung</h2>
-
-        <p>
-          Wir verarbeiten Ihre Daten für folgende Zwecke und auf der Grundlage
-          entsprechender Rechtsgrundlagen:
+          We may collect and process the following types of personal data for
+          use on our waiting list:
         </p>
 
         <ul>
           <li>
-            Zur Erfüllung eines Vertrags mit Ihnen oder zur Durchführung
-            vorvertraglicher Maßnahmen (Art. 6 Abs. 1 lit. b DSGVO)
+            Personal identification information (e.g., name, email address,
+            phone number)
           </li>
           <li>
-            Zur Erfüllung rechtlicher Verpflichtungen (Art. 6 Abs. 1 lit. c
-            DSGVO)
+            Demographic information (e.g., age, gender, location)
           </li>
-          <li>Aufgrund Ihrer Einwilligung (Art. 6 Abs. 1 lit. a DSGVO)</li>
           <li>
-            Zur Wahrung unserer berechtigten Interessen, sofern Ihre Interessen
-            oder Grundrechte und Grundfreiheiten nicht überwiegen (Art. 6 Abs. 1
-            lit. f DSGVO)
+            Other information you voluntarily provide to us
           </li>
         </ul>
 
-        <h2>4. Datenweitergabe an Dritte</h2>
+        <h3>3. Purposes and Legal Bases of Data Processing</h3>
 
         <p>
-          Wir geben Ihre Daten nur an Dritte weiter, wenn dies gesetzlich
-          vorgeschrieben ist oder wenn wir Ihre ausdrückliche Einwilligung dazu
-          erhalten haben.
-        </p>
-
-        <h2>5. Speicherdauer</h2>
-
-        <p>
-          Wir speichern Ihre Daten nur solange, wie es für die Erreichung der
-          Zwecke, für die sie erhoben wurden, erforderlich ist, es sei denn, es
-          liegen gesetzliche Aufbewahrungspflichten vor.
-        </p>
-
-        <h2>6. Ihre Rechte</h2>
-
-        <p>
-          Sie haben gemäß der DSGVO bestimmte Rechte in Bezug auf Ihre
-          personenbezogenen Daten, einschließlich:
+          We process your data for the following purposes and based on the
+          corresponding legal bases:
         </p>
 
         <ul>
           <li>
-            Recht auf Auskunft über Ihre gespeicherten Daten (Art. 15 DSGVO)
+            To fulfill a contract with you or to perform pre-contractual
+            measures (Art. 6 para. 1 lit. b GDPR)
           </li>
-          <li>Recht auf Berichtigung unrichtiger Daten (Art. 16 DSGVO)</li>
-          <li>Recht auf Löschung Ihrer Daten (Art. 17 DSGVO)</li>
-          <li>Recht auf Einschränkung der Verarbeitung (Art. 18 DSGVO)</li>
-          <li>Recht auf Datenübertragbarkeit (Art. 20 DSGVO)</li>
-          <li>Recht auf Widerspruch gegen die Verarbeitung (Art. 21 DSGVO)</li>
+          <li>
+            To fulfill legal obligations (Art. 6 para. 1 lit. c GDPR)
+          </li>
+          <li>Based on your consent (Art. 6 para. 1 lit. a GDPR)</li>
+          <li>
+            To protect our legitimate interests, provided that your interests or
+            fundamental rights and freedoms do not override (Art. 6 para. 1 lit.
+            f GDPR)
+          </li>
+        </ul>
+
+        <h3>4. Data Disclosure to Third Parties</h3>
+
+        <p>
+          We only disclose your data to third parties if required by law or if
+          we have obtained your explicit consent to do so.
+        </p>
+
+        <h3>5. Storage Duration</h3>
+
+        <p>
+          We only store your data for as long as necessary to achieve the
+          purposes for which they were collected, unless there are legal
+          retention obligations.
+        </p>
+
+        <h3>6. Your Rights</h3>
+
+        <p>
+          Under the GDPR, you have certain rights regarding your personal data,
+          including:
+        </p>
+
+        <ul>
+          <li>
+            Right to information about your stored data (Art. 15 GDPR)
+          </li>
+          <li>Right to rectification of inaccurate data (Art. 16 GDPR)</li>
+          <li>Right to erasure of your data (Art. 17 GDPR)</li>
+          <li>Right to restriction of processing (Art. 18 GDPR)</li>
+          <li>Right to data portability (Art. 20 GDPR)</li>
+          <li>Right to object to processing (Art. 21 GDPR)</li>
         </ul>
 
         <p>
-          Um Ihre Rechte auszuüben oder Fragen zur Datenverarbeitung zu stellen,
-          kontaktieren Sie uns bitte unter den unten angegebenen Kontaktdaten.
+          To exercise your rights or to ask questions about data processing,
+          please contact us using the contact details provided below.
         </p>
 
-        <h2>7. Beschwerderecht bei der Aufsichtsbehörde</h2>
+        <h3>7. Right to Lodge a Complaint with the Supervisory Authority</h3>
 
         <p>
-          Sie haben das Recht, eine Beschwerde bei der zuständigen
-          Datenschutzbehörde einzureichen, wenn Sie der Ansicht sind, dass die
-          Verarbeitung Ihrer personenbezogenen Daten gegen Datenschutzgesetze
-          verstößt.
+          You have the right to lodge a complaint with the competent data
+          protection authority if you believe that the processing of your
+          personal data violates data protection laws.
         </p>
 
-        <h2>8. Kontaktieren Sie uns</h2>
+        <h3>8. Contact Us</h3>
 
         <p>
-          Wenn Sie Fragen oder Bedenken bezüglich unserer Datenschutzerklärung
-          haben oder Ihre Datenschutzrechte ausüben möchten, kontaktieren Sie
-          uns bitte unter:
+          If you have any questions or concerns about our privacy policy or wish
+          to exercise your privacy rights, please contact us at:
         </p>
 
         <p>
-          [Name/Firma des Verantwortlichen]<br />
-          [Adresse]<br />
-          [Email-Adresse]<br />
-          [Telefonnummer]
+          Dipl.-Ing. Samir Alibabic – Online Marketing <br />
+          hashion.site <br />
+          Klugstraße 99 <br />
+          80637 Munich <br />
+          kontakt@hashion.site
         </p>
       </section>
     </>

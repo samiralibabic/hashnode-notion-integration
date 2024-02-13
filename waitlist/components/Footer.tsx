@@ -4,7 +4,7 @@ import Logo from "./Logo";
 export default function Footer() {
   return (
     <footer id="contact" className="gap-12 bg-[url('/footer-bg.svg')] bg-no-repeat bg-bottom bg-contain">
-      <div className="flex justify-around text-pale-sky">
+      <div className="flex justify-around">
         <Link href="/imprint">Imprint</Link>
         <Link href="/privacy">Privacy Policy</Link>
         <Link href="/terms">Terms of Use</Link>

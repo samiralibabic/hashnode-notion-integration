@@ -9,15 +9,14 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        'blue-ribbon': '#1051E9',
-        'jordy-blue': '#81A4F5',
-        'pattens-blue': '#DBEAFE',
-        'black-pearl': '#010209',
-        'pale-sky': '#6E7581',
-        'ghost': '#C8CBD0',
-        'athens-gray': '#F9FAFB',
-        'ebony': '#111827',
-      }
+        "ebony": "#111827", // unused
+        "orangina": "#F3A712", // button
+        "dark-lila": "#452C82", // icons, cta section
+        "ghost": "#9F9FED", // hover
+        "black-pearl": "#06020F", // headings, logo
+        "grey-sky": "#7d7c83", // normal text, header bottom border
+        "athens-gray": "#FAFAFA", // features section
+      },
     },
   },
   plugins: [],
