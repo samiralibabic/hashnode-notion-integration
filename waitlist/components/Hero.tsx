@@ -3,8 +3,8 @@ import EmailForm from "./EmailForm";
 
 export default function Hero() {
   return (
-    <section className="overflow-hidden">
-      <main className="flex flex-col gap-8 mt-8 -mb-20 items-center justify-center px-6">
+    <section className="overflow-hidden bg-[url('/footer-bg.svg')] bg-no-repeat bg-bottom bg-contain">
+      <main className="flex flex-col gap-8 my-8 items-center justify-center px-6">
         <p className="font-medium">NOTION INTEGRATION FOR HASHNODE</p>
         <h1>
           Put your Blogs into Notion
@@ -18,13 +18,6 @@ export default function Hero() {
           icons={true}
           legal={true}
         />
-        <div className="relative w-[120%] h-[80vw] -mt-20">
-          <Image
-            src="hero-icons.svg"
-            alt="Background image"
-            fill
-          />
-        </div>
       </main>
     </section>
   );

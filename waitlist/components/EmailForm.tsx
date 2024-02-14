@@ -68,7 +68,7 @@ export default function EmailForm(
           </h3>
         </div>
         <form onSubmit={handleSubmit} method="POST" className="">
-          <div className="flex flex-col items-center gap-2 lg:flex-row">
+          <div className="flex flex-col items-center gap-2">
             <label className="sr-only" htmlFor="email-address">
               Email address
             </label>
