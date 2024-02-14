@@ -1,6 +1,3 @@
-import Image from 'next/image';
-import placeholder from '../public/video.png';
-
 export default function Video() {
   return (
     <>
@@ -10,16 +7,20 @@ export default function Video() {
           We use OAuth to connect to Notion and your Hashnode Access Key and
           publication to connect to Hashnode.
         </p>
-        <Image
-          src={placeholder}
-          alt="Placeholder for video"
-        />
         <video
-          className="hidden"
-          src=""
-          width={300}
-          height={200}
+          className="border rounded-lg border-dark-lila"
+          width="80%"
+          height={500}
+          controls
+          preload="none"
+          poster="video-placeholder.png"
         >
+          <source
+            src="hashion-v0.mp4"
+            width={500}
+            height={500}
+          />
+          Your browser does not support the video tag.
         </video>
       </section>
     </>

@@ -3,7 +3,7 @@ import Logo from "./Logo";
 
 export default function Footer() {
   return (
-    <footer id="contact" className="gap-12 bg-[url('/footer-bg.svg')] bg-no-repeat bg-[position:0_50px] bg-contain lg:bg-cover xl:bg-center">
+    <footer id="contact" className="gap-12 bg-[url('/scribble-bg.svg')] bg-no-repeat bg-[position:0_50px] bg-contain lg:bg-cover xl:bg-center">
       <div className="flex justify-around">
         <Link href="/imprint">Imprint</Link>
         <Link href="/privacy">Privacy Policy</Link>

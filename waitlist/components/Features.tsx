@@ -32,7 +32,7 @@ export default function Features() {
         <div className="text-left">
           <h3 className="mb-3">Edit on either platform</h3>
           <p>
-            Edit either in Notnion or in Hashnode. Your content always stays in
+            Edit either in Notion or in Hashnode. Your content always stays in
             sync.
           </p>
         </div>

@@ -1,9 +1,8 @@
-import Image from "next/image";
 import EmailForm from "./EmailForm";
 
 export default function Hero() {
   return (
-    <section className="overflow-hidden bg-[url('/footer-bg.svg')] bg-no-repeat bg-bottom bg-contain">
+    <section className="overflow-hidden bg-[url('/scribble-bg.svg')] bg-no-repeat bg-bottom bg-contain">
       <main className="flex flex-col gap-8 my-8 items-center justify-center px-6">
         <p className="font-medium">NOTION INTEGRATION FOR HASHNODE</p>
         <h1>
