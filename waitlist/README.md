@@ -1,6 +1,6 @@
 # Next.js + EmailOctopus wait list page
 
-[![Screenshot]('screenshot.png') ]
+[![Screenshot]('./screenshot.png') ]
 
 ## Description:
 
