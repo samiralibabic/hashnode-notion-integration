@@ -1,5 +1,7 @@
 # Next.js + EmailOctopus wait list page
 
+[![Screenshot]('screenshot.png') ]
+
 ## Description:
 
 A wait list page to capture potential customer emails using EmailOctopus
