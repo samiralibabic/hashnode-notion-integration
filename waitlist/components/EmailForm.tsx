@@ -88,7 +88,7 @@ export default function EmailForm(
                 <InfoCircledIcon />
                 <p className="text-xs">
                   We handle your data with care. Please read our{" "}
-                  <Link className="underline" href="/policy">
+                  <Link className="underline" href="/privacy">
                     Privacy Policy
                   </Link>{" "}
                   for details.
