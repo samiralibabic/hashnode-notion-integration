@@ -16,3 +16,25 @@ Start development server on default port `3000`:
 ```shell
 pnpm run dev
 ```
+
+# Production
+
+We use Docker to ship the application. 
+
+## Build docker image
+
+To build the image using `Dockerfile` in the folder, run:
+
+```shell
+docker build -t hashion-waitlist .
+```
+
+## Run docker image
+
+Make sure you have Docker deamon running (I use limactl with docker inside) and run:
+
+```shell
+docker run -p 3000:3000 hashion-waitlist
+```
+
+Access the application on `http:localhost:3000`.
