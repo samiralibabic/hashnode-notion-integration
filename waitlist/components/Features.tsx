@@ -9,7 +9,7 @@ export default function Features() {
         <div className="relative w-20 h-16 row-span-2 align-top">
           <Image
             src="two-way-sync.svg"
-            alt="Mobile App Screenshots"
+            alt="Two-way sync icon"
             fill
           />
         </div>
@@ -25,7 +25,7 @@ export default function Features() {
         <div className="relative w-20 h-16 row-span-2 align-top">
           <Image
             src="edit-anywhere.svg"
-            alt="Mobile App Screenshots"
+            alt="Edit anywhere icon"
             fill
           />
         </div>
@@ -41,7 +41,7 @@ export default function Features() {
         <div className="relative w-20 h-16 row-span-2 align-top">
           <Image
             src="link-everything.svg"
-            alt="Mobile App Screenshots"
+            alt="Link everything icon"
             fill
           />
         </div>

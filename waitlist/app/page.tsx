@@ -15,14 +15,15 @@ export default function Home() {
 
       <Hero />
 
-      <Features />
+      <div className="xl:flex xl:flex-row">
+        <Features />
 
-      <Video />
+        <Video />
+      </div>
 
       <CTA />
 
       <Footer />
-
     </>
   );
 }

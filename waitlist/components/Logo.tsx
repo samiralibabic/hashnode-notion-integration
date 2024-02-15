@@ -7,7 +7,7 @@ export default function Logo() {
       <Link href="/" className="relative w-16 h-16 mr-4">
         <Image
           src="/logo-icon.svg"
-          alt="Hasion logo"
+          alt="Hashion logo"
           fill
         />
       </Link>
