@@ -4,8 +4,8 @@ import { UserProfile } from "./model/UserProfile.js";
 import Database from "bun:sqlite";
 
 /**
- * Creates a unique UUID, appends is to 'state' and initiates OAuth flow with Notion 
- * @returns {Response} - Redirect response to authorization url
+ * Creates a unique UUID, appends it to 'state' and initiates OAuth flow with Notion 
+ * @returns {Response} - Redirect response to enriched authorization url
  */
 export function add(): Response {
   console.log('Initiating OAuth flow with Notion...');

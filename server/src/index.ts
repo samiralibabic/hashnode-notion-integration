@@ -22,13 +22,6 @@ Bun.serve({
 
     return new Response("404!", { status: 404 });
   },
-  tls:
-    Bun.env.NODE_ENV === "development"
-      ? {
-        key: Bun.file("./ssl/localhost.key"),
-        cert: Bun.file("./ssl/localhost.crt"),
-      }
-      : undefined,
   error(error) {
     console.error(error.message);
 
