@@ -4,7 +4,7 @@
 
 @layer base {
   html {
-    @apply scroll-smooth text-[1vw];
+    @apply scroll-smooth xl:text-[1vw];
   }
 
   body {
@@ -52,7 +52,7 @@
   }
 
   header {
-    @apply px-10 py-5;
+    @apply px-5 sm:px-10 py-5;
   }
 
   section,

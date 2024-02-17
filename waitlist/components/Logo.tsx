@@ -4,7 +4,7 @@ import Link from "next/link";
 export default function Logo() {
   return (
     <div className="flex items-center">
-      <Link href="/" className="relative w-16 h-16 mr-4">
+      <Link href="/" className="relative w-16 h-16 sm:mr-4">
         <Image
           src="/logo-icon.svg"
           alt="Hashion logo"
