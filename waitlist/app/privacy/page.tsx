@@ -27,7 +27,7 @@ export default function Privacy() {
 
         <p>
           Dipl.-Ing. Samir Alibabic – Online Marketing <br />
-          hashion.site <br />
+          hashion.link <br />
           Klugstraße 99 <br />
           80637 Munich <br />
           kontakt@samiralibabic.de
@@ -131,7 +131,7 @@ export default function Privacy() {
 
         <p>
           Dipl.-Ing. Samir Alibabic – Online Marketing <br />
-          hashion.site <br />
+          hashion.link <br />
           Klugstraße 99 <br />
           80637 Munich <br />
           kontakt@samiralibabic.de
