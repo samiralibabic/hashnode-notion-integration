@@ -25,7 +25,7 @@ export default function Imprint() {
 
         <p>
           Phone: +49 (0) 1516 5727063 <br />
-          Email: contact@hashion.site
+          Email: kontakt@samiralibabic.de
         </p>
 
         <h3>VAT ID</h3>

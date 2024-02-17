@@ -88,7 +88,7 @@ export default function Terms() {
         <h3>Contact Us</h3>
         <p>
           If you have any questions about these terms, please contact us at
-          kontakt@hashion.site. By using our website, you agree to these terms
+          kontakt@samiralibabic.de. By using our website, you agree to these terms
           and conditions. If you do not agree to abide by these terms and
           conditions, you are not authorized to use or access this website.
         </p>

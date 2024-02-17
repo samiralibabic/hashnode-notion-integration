@@ -59,6 +59,7 @@ export async function notion(req: Request, hashionDb: Database): Promise<Respons
 
       insertIntoDb(hashionDb, userProfile);
 
+      // TODO: redirect to frontend (/form) to enter Hashnode info
       return new Response('Ok. Notion data collected. Proceeed to /hashnode.', { status: 200 });
     } catch (error) {
       console.error('Could not exchange authorization code for access token.', (error as Error).message);

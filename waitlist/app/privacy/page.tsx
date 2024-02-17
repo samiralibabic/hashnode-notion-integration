@@ -30,7 +30,7 @@ export default function Privacy() {
           hashion.site <br />
           Klugstraße 99 <br />
           80637 Munich <br />
-          kontakt@hashion.site
+          kontakt@samiralibabic.de
         </p>
 
         <h3>2. What Data We Collect</h3>
@@ -134,7 +134,7 @@ export default function Privacy() {
           hashion.site <br />
           Klugstraße 99 <br />
           80637 Munich <br />
-          kontakt@hashion.site
+          kontakt@samiralibabic.de
         </p>
       </section>
     </>
