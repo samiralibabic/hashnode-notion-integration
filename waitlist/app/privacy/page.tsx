@@ -1,11 +1,9 @@
-import Header from "@/components/Header";
 import Link from "next/link";
 import { ArrowLeftIcon } from "@radix-ui/react-icons";
 
 export default function Privacy() {
   return (
     <>
-      <Header />
       <Link className="flex m-5 items-center" href="/">
         <ArrowLeftIcon className="mr-2" />Back
       </Link>

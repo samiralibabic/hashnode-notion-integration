@@ -1,6 +1,10 @@
+import { Toaster } from "react-hot-toast";
+import Header from "@/components/Header";
+import Footer from "@/components/Footer";
 import type { Metadata } from "next";
 import { Inter_Tight } from "next/font/google";
 import "./globals.css";
+import Script from "next/script";
 
 const inter = Inter_Tight({ subsets: ["latin"] });
 
@@ -17,7 +21,17 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className={inter.className}>{children}</body>
+      <body className={inter.className}>
+        <Toaster />
+
+        <Header />
+
+        {children}
+
+        <Footer />
+
+        <Script id="matomo" src="/matomo.js" strategy="afterInteractive" />
+      </body>
     </html>
   );
 }
