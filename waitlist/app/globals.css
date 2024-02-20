@@ -17,12 +17,20 @@
     @apply font-semibold text-black-pearl;
   }
 
+  h4 {
+    @apply text-black-pearl;
+  }
+
   .legal h2 {
     @apply mb-5;
   }
 
   .legal h3 {
     @apply mt-10 mb-5;
+  }
+
+  .legal h4 {
+    @apply my-2;
   }
 
   h1 {
