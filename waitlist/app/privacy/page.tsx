@@ -120,7 +120,65 @@ export default function Privacy() {
           personal data violates data protection laws.
         </p>
 
-        <h3>8. Contact Us</h3>
+        <h3>8. Matomo Analytics</h3>
+
+        <p>
+          We use Matomo Analytics, a web analytics service provided by InnoCraft Ltd., to collect and analyze information about the usage of our website. Matomo operates in compliance with the General Data Protection Regulation (GDPR) and respects user privacy.
+        </p>
+
+        <h4>Information Collected</h4>
+
+        <p>
+          Matomo does not utilize cookies on our website. Instead, it collects anonymized data directly from server logs. This data may include:
+        </p>
+
+        <ul>
+          <li>Your IP address (anonymized)</li>
+          <li>Pages visited on our site</li>
+          <li>Time spent on each page</li>
+          <li>Browser type and version</li>
+          <li>Referring website</li>
+          <li>Any search queries made</li>
+        </ul>
+
+        <h4>Purpose of Data Collection</h4>
+
+        <p>
+          The data collected by Matomo is used to analyze user behavior and improve the performance, usability, and content of our website. This helps us understand how visitors interact with our site, what content is most popular, and how we can enhance the user experience.
+        </p>
+
+        <h4>Legal Basis for Processing</h4>
+
+        <p>
+          The legal basis for processing this data is our legitimate interest in analyzing website traffic and improving our services. We do not process any personally identifiable information (PII) through Matomo, and all data is anonymized to protect user privacy.
+        </p>
+
+        <h4>Data Retention</h4>
+
+        <p>
+          Matomo data is retained for a limited period, after which it is automatically deleted. We do not store personal data or use the information collected by Matomo for any other purpose than website analytics.
+        </p>
+
+        <h4>Your Rights</h4>
+
+        <p>
+          As a user, you have the right to:
+        </p>
+
+        <ul>
+          <li>Access the data collected by Matomo about your visit to our website.</li>
+          <li>Request correction or deletion of any inaccurate data.</li>
+          <li>Object to the processing of your data for analytics purposes.</li>
+          <li>Lodge a complaint with a supervisory authority if you believe your rights have been violated.</li>
+        </ul>
+
+        <h4>Opting Out</h4>
+
+        <p>
+          If you prefer not to have your data collected by Matomo, you can opt out by disabling JavaScript in your browser or by using the "Do Not Track" setting. Please note that opting out may affect your ability to fully access and use certain features of our website.
+        </p>
+
+        <h3>9. Contact Us</h3>
 
         <p>
           If you have any questions or concerns about our privacy policy or wish
