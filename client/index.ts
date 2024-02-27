@@ -1,15 +1,27 @@
+const BASE_PATH = "./public";
+
 const server = Bun.serve({
-  async fetch(req: Request) {
-    const url = new URL(req.url);
-    if (url.pathname === "/form") {
-      return new Response(Bun.file("./form/index.html"), {
+  port: 3000,
+  async fetch(req) {
+    const requestUrl = new URL(req.url).pathname;
+
+    // serve form
+    if (requestUrl === "/form") {
+      return new Response(Bun.file("./src/form/index.html"), {
         headers: {
           "Content-Type": "text/html",
         },
       });
     }
 
-    return new Response("Not found", { status: 404 });
+    // Other requests are served from public folder
+    const filePath = BASE_PATH + new URL(req.url).pathname;
+    const file = Bun.file(filePath);
+    return new Response(file);
+  },
+  error() {
+    return new Response(null, { status: 404 });
   },
 });
+
 console.log(`Listening on http://localhost:${server.port}`);
