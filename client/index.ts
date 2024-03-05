@@ -5,6 +5,11 @@ const server = Bun.serve({
   async fetch(req) {
     const requestUrl = new URL(req.url).pathname;
 
+    // serve landing page with "Add to Notion" button
+    if (requestUrl === "/") {
+      return new Response("Landing page");
+    }
+
     // serve form
     if (requestUrl === "/form") {
       return new Response(Bun.file("./src/form/index.html"), {

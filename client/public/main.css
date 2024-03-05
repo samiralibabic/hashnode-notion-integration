@@ -607,6 +607,18 @@ body {
   top: 0.25rem;
 }
 
+.top-2 {
+  top: 0.5rem;
+}
+
+.top-4 {
+  top: 1rem;
+}
+
+.top-5 {
+  top: 1.25rem;
+}
+
 .flex {
   display: flex;
 }
@@ -625,6 +637,10 @@ body {
 
 .h-7 {
   height: 1.75rem;
+}
+
+.h-screen {
+  height: 100vh;
 }
 
 .w-4 {
