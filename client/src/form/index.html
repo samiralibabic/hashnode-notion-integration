@@ -5,6 +5,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <link href="./main.css" rel="stylesheet" />
+  <title>Configure Hashnode</title>
 </head>
 
 <body class="h-screen flex justify-center items-center">
@@ -17,29 +18,32 @@
         Connect your Hashnode blog to Notion by providing the details below.
       </p>
     </div>
-    <form>
+    <form method="get" id="hashnodeForm">
       <div class="p-6 space-y-4">
         <div class="space-y-2">
-          <label class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-            for="publication">Publication</label><input
+          <label for="publication"
+            class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">Publication</label>
+          <input type="text" id="publication" name="publication"
             class="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
-            id="publication" placeholder="samiralibabic.hashnode.dev" required="" />
+            placeholder="publication.hashnode.dev" required />
         </div>
         <div class="relative space-y-2">
           <div class="flex items-center">
-            <label class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-              for="apikey">Personal Access Token</label>
+            <label for="apikey"
+              class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">Personal
+              Access Token</label>
           </div>
-          <input
+          <input type="password" id="hashnode_key" name="hashnode_key"
             class="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
-            id="apikey" placeholder="Personal Access Token" required="" type="password" />
-          <a
+            placeholder="Personal Access Token" required />
+          <a href="#"
             class="whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 hover:bg-accent hover:text-accent-foreground absolute top-5 right-1 h-7 w-7 flex items-center justify-center">
             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
               stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-4 w-4">
               <path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"></path>
               <circle cx="12" cy="12" r="3"></circle>
-            </svg><span class="sr-only">Toggle password visibility</span>
+            </svg>
+            <span class="sr-only">Toggle password visibility</span>
           </a>
         </div>
         <button
@@ -50,6 +54,51 @@
       </div>
     </form>
   </div>
+
+  <script>
+    // Function to get URL parameter by name
+    function getUrlParameter(name) {
+      name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
+      var regex = new RegExp("[\\?&]" + name + "=([^&#]*)");
+      var results = regex.exec(location.search);
+      return results === null
+        ? ""
+        : decodeURIComponent(results[1].replace(/\+/g, " "));
+    }
+
+    // Get the UUID query parameter value
+    var uuid = getUrlParameter("uuid");
+
+    // Set the form action dynamically with uuid parameter and form data
+    document
+      .getElementById("hashnodeForm")
+      .addEventListener("submit", function (event) {
+        // Prevent the default form submission behavior
+        event.preventDefault();
+
+        var form = event.target;
+
+        // Create a hidden input field for UUID
+        var uuidInput = document.createElement("input");
+        uuidInput.type = "hidden";
+        uuidInput.name = "uuid";
+        uuidInput.value = uuid;
+
+        form.action = "http://localhost"
+        // Append the hidden input field to the form
+        form.appendChild(uuidInput);
+
+        // Get form data
+        var formData = new FormData(form);
+        var serializedFormData = new URLSearchParams(formData).toString();
+
+        // Create redirected action
+        form.action = "http://localhost:3000/hashnode?" + serializedFormData;
+
+        // Submit the form programmatically
+        form.submit();
+      });
+  </script>
 </body>
 
 </html>
