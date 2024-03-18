@@ -59,8 +59,7 @@ export async function notion(req: Request, hashionDb: Database): Promise<Respons
 
       insertIntoDb(hashionDb, userProfile);
 
-      // TODO: redirect to frontend (/form) to enter Hashnode info
-      return new Response('Ok. Notion data collected. Proceeed to /hashnode.', { status: 200 });
+      return Response.redirect(`https://hashnodenotion.site/hashnode?state=${uuid}`, 302);
     } catch (error) {
       console.error('Could not exchange authorization code for access token.', (error as Error).message);
 
@@ -94,7 +93,7 @@ export function hashnode(req: Request, hashionDb: Database): Response {
   const url = new URL(req.url);
   const publication = url.searchParams.get('publication');
   const hashnode_key = url.searchParams.get('hashnode_key');
-  const uuid = url.searchParams.get('uuid');
+  const uuid = url.searchParams.get('state');
 
   let userProfile: UserProfile = selectByUuid(hashionDb, uuid as string) as UserProfile;
 

@@ -66,10 +66,10 @@
         : decodeURIComponent(results[1].replace(/\+/g, " "));
     }
 
-    // Get the UUID query parameter value
-    var uuid = getUrlParameter("uuid");
+    // Get the UUID value from the state query parameter
+    var uuid = getUrlParameter("state");
 
-    // Set the form action dynamically with uuid parameter and form data
+    // Add uuid to form data and submit the form programmatically with state = uuid
     document
       .getElementById("hashnodeForm")
       .addEventListener("submit", function (event) {
@@ -81,10 +81,9 @@
         // Create a hidden input field for UUID
         var uuidInput = document.createElement("input");
         uuidInput.type = "hidden";
-        uuidInput.name = "uuid";
+        uuidInput.name = "state";
         uuidInput.value = uuid;
 
-        form.action = "http://localhost"
         // Append the hidden input field to the form
         form.appendChild(uuidInput);
 
@@ -93,7 +92,7 @@
         var serializedFormData = new URLSearchParams(formData).toString();
 
         // Create redirected action
-        form.action = "http://localhost:3000/hashnode?" + serializedFormData;
+        form.action = "https://api.hashnodenotion.site/hashnode?" + serializedFormData;
 
         // Submit the form programmatically
         form.submit();
