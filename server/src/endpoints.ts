@@ -59,7 +59,7 @@ export async function notion(req: Request, hashionDb: Database): Promise<Respons
 
       insertIntoDb(hashionDb, userProfile);
 
-      return Response.redirect(`https://hashnodenotion.site/hashnode?state=${uuid}`, 302);
+      return Response.redirect(`https://hashnodenotion.site/form?state=${uuid}`, 302);
     } catch (error) {
       console.error('Could not exchange authorization code for access token.', (error as Error).message);
 
