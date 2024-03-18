@@ -2,7 +2,6 @@ import { createDatabase } from "./services/database.js";
 import "./util/logger.js";
 import { add, notion, verify, hashnode } from "./endpoints.js";
 
-
 const server = Bun.serve({
   async fetch(req) {
     let hashionDb = createDatabase();
