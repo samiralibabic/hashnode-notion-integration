@@ -7,7 +7,11 @@ const server = Bun.serve({
 
     // serve landing page with "Add to Notion" button
     if (requestUrl === "/") {
-      return new Response("Landing page");
+      return new Response(Bun.file("./src/index.html"), {
+        headers: {
+          "Content-Type": "text/html",
+        }
+      });
     }
 
     // serve form
@@ -29,4 +33,4 @@ const server = Bun.serve({
   },
 });
 
-console.log(`Listening on http://localhost:${server.port}`);
+console.log(`Listening on ${server.url}`);

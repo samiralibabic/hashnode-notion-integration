@@ -2,9 +2,8 @@ import { createDatabase } from "./services/database.js";
 import "./util/logger.js";
 import { add, notion, verify, hashnode } from "./endpoints.js";
 
-console.log(`Starting ${Bun.env.NODE_ENV} server on http://localhost:3000.`);
 
-Bun.serve({
+const server = Bun.serve({
   async fetch(req) {
     let hashionDb = createDatabase();
     const url = new URL(req.url);
@@ -28,3 +27,5 @@ Bun.serve({
     return Response.error();
   }
 });
+
+console.log(`Starting ${Bun.env.NODE_ENV} server on ${server.url}`);
